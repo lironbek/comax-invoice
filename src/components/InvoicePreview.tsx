@@ -1,7 +1,7 @@
 
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram, TikTok } from "lucide-react";
+import { Facebook, Instagram, MessageSquare } from "lucide-react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
@@ -146,7 +146,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 rel="noopener noreferrer"
                 className="text-black hover:text-gray-800"
               >
-                <TikTok size={24} />
+                <MessageSquare size={24} />
               </a>
             )}
           </div>

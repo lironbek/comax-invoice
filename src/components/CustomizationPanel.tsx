@@ -4,7 +4,7 @@ import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Facebook, Instagram, TikTok } from "lucide-react";
+import { Facebook, Instagram, MessageSquare } from "lucide-react";
 import { 
   Select,
   SelectContent,
@@ -191,7 +191,7 @@ export default function CustomizationPanel({
         </div>
         
         <div className="flex items-center space-x-3">
-          <TikTok size={20} className="text-black" />
+          <MessageSquare size={20} className="text-black" />
           <Input
             placeholder="TikTok URL"
             value={settings.socialMedia.tiktok}
