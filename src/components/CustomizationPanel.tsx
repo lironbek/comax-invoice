@@ -242,7 +242,7 @@ export default function CustomizationPanel({
       </div>
 
       <Button
-        className="w-full"
+        className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] transition-colors"
         onClick={onSave}
         disabled={isSaving}
       >
