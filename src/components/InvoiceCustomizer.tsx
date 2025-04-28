@@ -7,30 +7,32 @@ import CustomizationPanel from "@/components/CustomizationPanel";
 
 export interface InvoiceSettings {
   bannerImage: string | null;
+  secondaryBannerImage: string | null;
   logo: string | null;
   backgroundColor: string;
+  innerFrameColor: string;
+  outerFrameColor: string;
   font: string;
   socialMedia: {
     facebook: string;
     instagram: string;
     tiktok: string;
   };
-  companyName: string;
-  branchName: string;
 }
 
 const defaultSettings: InvoiceSettings = {
   bannerImage: null,
+  secondaryBannerImage: null,
   logo: null,
   backgroundColor: "#ffffff",
+  innerFrameColor: "#f3f3f3",
+  outerFrameColor: "#f8f8f8",
   font: "Arial",
   socialMedia: {
     facebook: "",
     instagram: "",
     tiktok: "",
   },
-  companyName: "Company Name",
-  branchName: "Branch Name",
 };
 
 export default function InvoiceCustomizer() {
