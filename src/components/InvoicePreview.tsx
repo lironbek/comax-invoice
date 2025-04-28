@@ -32,7 +32,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
         style={{ backgroundColor: innerFrameColor }}
       >
         <div 
-          className={`w-full max-w-[600px] mx-auto overflow-hidden ${fontClass}`}
+          className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
           style={{ backgroundColor }}
         >
           {/* Banner Image */}
@@ -63,7 +63,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
           {/* Main Content */}
           <div className="px-8">
-            <Separator className="my-2 mx-4" />
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-2" />
+            </div>
 
             {/* Invoice Items */}
             <div className="py-2">
@@ -92,7 +94,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               </div>
             </div>
 
-            <Separator className="my-2 mx-4" />
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-2" />
+            </div>
 
             {/* Payment Information */}
             <div className="p-6 space-y-1 text-center text-sm">
@@ -106,7 +110,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <p>Employee</p>
             </div>
 
-            <Separator className="my-2 mx-4" />
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-2" />
+            </div>
 
             {/* Footer */}
             <div className="p-6 text-center">
@@ -114,48 +120,59 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               
               {/* Social Media Icons */}
               {hasSocialMedia && (
-                <div className="flex justify-center space-x-4 my-4">
-                  {socialMedia.facebook && (
-                    <a 
-                      href={socialMedia.facebook} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <Facebook size={24} />
-                    </a>
-                  )}
-                  {socialMedia.instagram && (
-                    <a 
-                      href={socialMedia.instagram} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-pink-600 hover:text-pink-800"
-                    >
-                      <Instagram size={24} />
-                    </a>
-                  )}
-                  {socialMedia.tiktok && (
-                    <a 
-                      href={socialMedia.tiktok} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-black hover:text-gray-800"
-                    >
-                      <MessageSquare size={24} />
-                    </a>
-                  )}
-                </div>
+                <>
+                  <div className="flex justify-center space-x-4 my-4">
+                    {socialMedia.facebook && (
+                      <a 
+                        href={socialMedia.facebook} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Facebook size={24} />
+                      </a>
+                    )}
+                    {socialMedia.instagram && (
+                      <a 
+                        href={socialMedia.instagram} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-pink-600 hover:text-pink-800"
+                      >
+                        <Instagram size={24} />
+                      </a>
+                    )}
+                    {socialMedia.tiktok && (
+                      <a 
+                        href={socialMedia.tiktok} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-gray-800"
+                      >
+                        <MessageSquare size={24} />
+                      </a>
+                    )}
+                  </div>
+                  <div className="max-w-[400px] mx-auto">
+                    <Separator className="my-4" />
+                  </div>
+                </>
               )}
               
-              <p className="text-lg font-bold my-4">DOC 652 BARCODE</p>
+              <p className="text-lg font-bold my-4">DOC 652</p>
               
               {/* Barcode */}
               <div className="flex justify-center my-4">
-                <Barcode size={200} />
+                <img 
+                  src="/lovable-uploads/8494e468-2f1b-47b8-8486-821a6b9ff1f7.png"
+                  alt="Barcode"
+                  className="h-16 object-contain"
+                />
               </div>
 
-              <Separator className="my-2 mx-4" />
+              <div className="max-w-[400px] mx-auto">
+                <Separator className="my-4" />
+              </div>
 
               {/* Secondary Banner */}
               <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">

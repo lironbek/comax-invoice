@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoicePreview from "@/components/InvoicePreview";
 import CustomizationPanel from "@/components/CustomizationPanel";
 
@@ -56,12 +55,17 @@ export default function InvoiceCustomizer() {
     }));
   };
 
+  const handleFileRemove = (field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    setSettings((prev) => ({
+      ...prev,
+      [field]: null
+    }));
+  };
+
   const handleSaveChanges = () => {
     setIsSaving(true);
-    // Simulate API call
     setTimeout(() => {
       setIsSaving(false);
-      // Show success toast
     }, 1000);
   };
 
@@ -83,69 +87,17 @@ export default function InvoiceCustomizer() {
         </div>
         
         <div className="order-1 lg:order-2">
-          <Card className="shadow-md">
-            <Tabs defaultValue="appearance">
-              <div className="p-4 border-b">
-                <h2 className="text-xl font-semibold">Customization Settings</h2>
-                <p className="text-sm text-muted-foreground">
-                  Personalize how your invoice appears to customers
-                </p>
-                <TabsList className="mt-4">
-                  <TabsTrigger value="appearance">Appearance</TabsTrigger>
-                  <TabsTrigger value="company">Company Details</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <TabsContent value="appearance" className="p-4 space-y-6">
-                <CustomizationPanel 
-                  settings={settings} 
-                  onSettingsChange={handleSettingsChange}
-                  onSocialMediaChange={handleSocialMediaChange}
-                  onSave={handleSaveChanges}
-                  isSaving={isSaving}
-                />
-              </TabsContent>
-              
-              <TabsContent value="company" className="p-4 space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="companyName" className="text-sm font-medium">
-                      Company Name
-                    </label>
-                    <input
-                      id="companyName"
-                      className="w-full p-2 border rounded-md"
-                      value={settings.companyName}
-                      onChange={(e) => 
-                        handleSettingsChange({ companyName: e.target.value })
-                      }
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label htmlFor="branchName" className="text-sm font-medium">
-                      Branch Name
-                    </label>
-                    <input
-                      id="branchName"
-                      className="w-full p-2 border rounded-md"
-                      value={settings.branchName}
-                      onChange={(e) => 
-                        handleSettingsChange({ branchName: e.target.value })
-                      }
-                    />
-                  </div>
-                  
-                  <button
-                    onClick={handleSaveChanges}
-                    disabled={isSaving}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2 rounded-md transition-colors"
-                  >
-                    {isSaving ? "Saving..." : "Save Changes"}
-                  </button>
-                </div>
-              </TabsContent>
-            </Tabs>
+          <Card className="shadow-md p-6">
+            <div className="space-y-6">
+              <CustomizationPanel 
+                settings={settings} 
+                onSettingsChange={handleSettingsChange}
+                onSocialMediaChange={handleSocialMediaChange}
+                onFileRemove={handleFileRemove}
+                onSave={handleSaveChanges}
+                isSaving={isSaving}
+              />
+            </div>
           </Card>
         </div>
       </div>
