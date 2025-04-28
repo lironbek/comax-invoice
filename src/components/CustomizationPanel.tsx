@@ -1,4 +1,3 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,6 +63,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
+          <p className="text-xs text-muted-foreground">Recommended size: 800x200px, max 2MB</p>
         </div>
 
         <div className="space-y-2">
@@ -98,6 +98,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
+          <p className="text-xs text-muted-foreground">Recommended size: 200x200px, max 1MB</p>
         </div>
 
         <div className="space-y-2">
@@ -132,6 +133,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
+          <p className="text-xs text-muted-foreground">Recommended size: 800x100px, max 1MB</p>
         </div>
 
         <div className="space-y-4">
