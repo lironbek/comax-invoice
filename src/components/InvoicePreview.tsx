@@ -176,7 +176,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               </div>
 
               {/* Secondary Banner */}
-              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
+              <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden mt-4">
                 {secondaryBannerImage ? (
                   <img 
                     src={secondaryBannerImage} 
@@ -188,13 +188,13 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 )}
               </div>
               
-              {/* Powered By Footer */}
+              {/* Powered By Footer - Swapped positions */}
               <div className="flex justify-between items-center text-sm mt-6">
-                <div>
-                  מופעל על ידי <span className="text-[#34A853] font-bold">COMAX</span>
-                </div>
                 <div className="text-blue-500">
                   הורד מסמך מקורי
+                </div>
+                <div>
+                  Powered by <span className="text-[#34A853] font-bold">COMAX</span>
                 </div>
               </div>
             </div>
