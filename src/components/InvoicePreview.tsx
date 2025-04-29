@@ -1,4 +1,3 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
@@ -33,7 +32,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
         style={{ backgroundColor: innerFrameColor }}
       >
         <div 
-          className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass} rtl`}
+          className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
           style={{ backgroundColor }}
         >
           {/* Banner Image */}
@@ -41,11 +40,11 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
             {bannerImage ? (
               <img 
                 src={bannerImage} 
-                alt="תמונת באנר" 
+                alt="Invoice Banner" 
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-4xl font-bold text-gray-700">באנר</span>
+              <span className="text-4xl font-bold text-gray-700">BANNER</span>
             )}
           </div>
 
@@ -55,7 +54,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <div className="mb-4 flex justify-center">
                 <img 
                   src={logo} 
-                  alt="לוגו החברה" 
+                  alt="Company Logo" 
                   className="h-16 object-contain" 
                 />
               </div>
@@ -71,9 +70,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
             {/* Invoice Items */}
             <div className="py-2">
               <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-2">
-                <div>סכום</div>
-                <div className="text-center">כמות</div>
-                <div className="text-right">שם פריט</div>
+                <div>WORTH</div>
+                <div className="text-center">AMMOUNT</div>
+                <div className="text-right">ITEM NAME</div>
               </div>
               
               {[1, 2, 3].map((item, index) => (
@@ -81,8 +80,8 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                   <div>{currencySymbol} 49.90</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
-                    <div>שם הפריט</div>
-                    <div className="text-xs text-gray-500">ברקוד</div>
+                    <div>ITEM NAME</div>
+                    <div className="text-xs text-gray-500">BARCODE</div>
                   </div>
                 </div>
               ))}
@@ -91,7 +90,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <div className="grid grid-cols-3 gap-4 py-2 text-sm text-amber-500">
                 <div>{currencySymbol} - 15.00</div>
                 <div className="text-center"></div>
-                <div className="text-right">שם הנחה</div>
+                <div className="text-right">Discount Name</div>
               </div>
             </div>
 
@@ -101,14 +100,14 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
             {/* Payment Information */}
             <div className="p-6 space-y-1 text-center text-sm">
-              <p>אמצעי תשלום</p>
-              <p>סכום לפני מע"מ</p>
-              <p>סכום המע"מ</p>
-              <p>סך תשלום</p>
-              <p>מספר חשבונית</p>
-              <p>תאריך ושעה</p>
-              <p>מספר קופה</p>
-              <p>קופאי/ת</p>
+              <p>Payment methood</p>
+              <p>sum before VAT</p>
+              <p>VAT worth</p>
+              <p>Total Payment</p>
+              <p>Invoice number</p>
+              <p>DOC DateTime</p>
+              <p>POS num</p>
+              <p>Employee</p>
             </div>
 
             <div className="max-w-[400px] mx-auto">
@@ -117,7 +116,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
             {/* Footer */}
             <div className="p-6 text-center">
-              <p className="text-lg font-bold mb-4">טקסט תחתון</p>
+              <p className="text-lg font-bold mb-4">FOOTER TEXT</p>
               
               {/* Social Media Icons */}
               {hasSocialMedia && (
@@ -160,13 +159,13 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 </>
               )}
               
-              <p className="text-lg font-bold my-4">מסמך 652</p>
+              <p className="text-lg font-bold my-4">DOC 652</p>
               
               {/* Barcode */}
               <div className="flex justify-center my-4">
                 <img 
                   src="/lovable-uploads/8494e468-2f1b-47b8-8486-821a6b9ff1f7.png"
-                  alt="ברקוד"
+                  alt="Barcode"
                   className="h-16 object-contain"
                 />
               </div>
@@ -176,25 +175,25 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               </div>
 
               {/* Secondary Banner */}
-              <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden mt-4">
+              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
                 {secondaryBannerImage ? (
                   <img 
                     src={secondaryBannerImage} 
-                    alt="באנר משני" 
+                    alt="Secondary Banner" 
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-2xl font-bold text-gray-700">באנר משני</span>
+                  <span className="text-2xl font-bold text-gray-700">SECONDARY BANNER</span>
                 )}
               </div>
               
-              {/* Powered By Footer - Swapped positions */}
+              {/* Powered By Footer */}
               <div className="flex justify-between items-center text-sm mt-6">
-                <div className="text-blue-500">
-                  הורד מסמך מקורי
-                </div>
                 <div>
-                  Powered by <span className="text-[#34A853] font-bold">COMAX</span>
+                  Powered By <span className="text-green-500 font-bold">COMAX</span>
+                </div>
+                <div className="text-blue-500">
+                  Download Original Doc
                 </div>
               </div>
             </div>

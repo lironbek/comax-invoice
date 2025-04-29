@@ -70,23 +70,23 @@ export default function InvoiceCustomizer() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-7xl rtl">
-      <h1 className="text-3xl font-bold mb-6 text-center">התאמה אישית של חשבונית</h1>
+    <div className="container mx-auto p-4 max-w-7xl">
+      <h1 className="text-3xl font-bold mb-6 text-center">Invoice Customization</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="order-1 lg:order-1">
+        <div className="order-2 lg:order-1">
           <Card className="overflow-hidden shadow-md">
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">תצוגה מקדימה של החשבונית</h2>
+              <h2 className="text-xl font-semibold mb-2">Invoice Preview</h2>
               <p className="text-sm text-muted-foreground mb-4">
-                צפייה מקדימה באופן שבו החשבונית תופיע ללקוחות
+                Preview how your invoice will look to customers
               </p>
             </div>
             <InvoicePreview settings={settings} />
           </Card>
         </div>
         
-        <div className="order-2 lg:order-2">
+        <div className="order-1 lg:order-2">
           <Card className="shadow-md p-6">
             <div className="space-y-6">
               <CustomizationPanel 
