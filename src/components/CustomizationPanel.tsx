@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,19 +30,19 @@ export default function CustomizationPanel({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 rtl">
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="banner-upload" className="font-medium">
-            Promotional Banner
+            באנר פרסומי
           </Label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 space-x-reverse">
             <Button
               variant="outline"
               className="relative overflow-hidden"
               onClick={() => document.getElementById("banner-upload")?.click()}
             >
-              Upload Banner
+              העלאת באנר
               <input
                 type="file"
                 id="banner-upload"
@@ -51,7 +52,7 @@ export default function CustomizationPanel({
               />
             </Button>
             <span className="text-sm text-muted-foreground flex-1">
-              {settings.bannerImage ? 'Image uploaded' : 'No file selected'}
+              {settings.bannerImage ? 'תמונה הועלתה' : 'לא נבחר קובץ'}
             </span>
             {settings.bannerImage && (
               <Button
@@ -63,20 +64,20 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x200px, max 2MB</p>
+          <p className="text-xs text-muted-foreground">גודל מומלץ: 800x200px, מקסימום 2MB</p>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="logo-upload" className="font-medium">
-            Company Logo
+            לוגו החברה
           </Label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 space-x-reverse">
             <Button
               variant="outline"
               className="relative overflow-hidden"
               onClick={() => document.getElementById("logo-upload")?.click()}
             >
-              Upload Logo
+              העלאת לוגו
               <input
                 type="file"
                 id="logo-upload"
@@ -86,7 +87,7 @@ export default function CustomizationPanel({
               />
             </Button>
             <span className="text-sm text-muted-foreground flex-1">
-              {settings.logo ? 'Image uploaded' : 'No file selected'}
+              {settings.logo ? 'תמונה הועלתה' : 'לא נבחר קובץ'}
             </span>
             {settings.logo && (
               <Button
@@ -98,20 +99,20 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 200x200px, max 1MB</p>
+          <p className="text-xs text-muted-foreground">גודל מומלץ: 200x200px, מקסימום 1MB</p>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="secondary-banner-upload" className="font-medium">
-            Secondary Banner
+            באנר משני
           </Label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 space-x-reverse">
             <Button
               variant="outline"
               className="relative overflow-hidden"
               onClick={() => document.getElementById("secondary-banner-upload")?.click()}
             >
-              Upload Secondary Banner
+              העלאת באנר משני
               <input
                 type="file"
                 id="secondary-banner-upload"
@@ -121,7 +122,7 @@ export default function CustomizationPanel({
               />
             </Button>
             <span className="text-sm text-muted-foreground flex-1">
-              {settings.secondaryBannerImage ? 'Image uploaded' : 'No file selected'}
+              {settings.secondaryBannerImage ? 'תמונה הועלתה' : 'לא נבחר קובץ'}
             </span>
             {settings.secondaryBannerImage && (
               <Button
@@ -133,17 +134,17 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x100px, max 1MB</p>
+          <p className="text-xs text-muted-foreground">גודל מומלץ: 800x100px, מקסימום 1MB</p>
         </div>
 
         <div className="space-y-4">
-          <Label className="font-medium">Colors</Label>
+          <Label className="font-medium">צבעים</Label>
           
           <div className="space-y-2">
             <Label htmlFor="background-color" className="text-sm">
-              Background Color
+              צבע רקע
             </Label>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 space-x-reverse">
               <Input
                 type="color"
                 id="background-color"
@@ -163,9 +164,9 @@ export default function CustomizationPanel({
 
           <div className="space-y-2">
             <Label htmlFor="inner-frame-color" className="text-sm">
-              Inner Frame Color
+              צבע מסגרת פנימית
             </Label>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 space-x-reverse">
               <Input
                 type="color"
                 id="inner-frame-color"
@@ -185,9 +186,9 @@ export default function CustomizationPanel({
 
           <div className="space-y-2">
             <Label htmlFor="outer-frame-color" className="text-sm">
-              Outer Frame Color
+              צבע מסגרת חיצונית
             </Label>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 space-x-reverse">
               <Input
                 type="color"
                 id="outer-frame-color"
@@ -207,32 +208,32 @@ export default function CustomizationPanel({
         </div>
 
         <div className="space-y-4">
-          <Label className="font-medium">Social Media Links</Label>
+          <Label className="font-medium">קישורי מדיה חברתית</Label>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 space-x-reverse">
             <Facebook size={20} className="text-blue-600" />
             <Input
-              placeholder="Facebook URL"
+              placeholder="כתובת פייסבוק"
               value={settings.socialMedia.facebook}
               onChange={(e) => onSocialMediaChange("facebook", e.target.value)}
               className="flex-1"
             />
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 space-x-reverse">
             <Instagram size={20} className="text-pink-600" />
             <Input
-              placeholder="Instagram URL"
+              placeholder="כתובת אינסטגרם"
               value={settings.socialMedia.instagram}
               onChange={(e) => onSocialMediaChange("instagram", e.target.value)}
               className="flex-1"
             />
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 space-x-reverse">
             <MessageSquare size={20} className="text-black" />
             <Input
-              placeholder="TikTok URL"
+              placeholder="כתובת טיקטוק"
               value={settings.socialMedia.tiktok}
               onChange={(e) => onSocialMediaChange("tiktok", e.target.value)}
               className="flex-1"
@@ -242,11 +243,11 @@ export default function CustomizationPanel({
       </div>
 
       <Button
-        className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] transition-colors"
+        className="w-full bg-[#34A853] hover:bg-[#2A8644] transition-colors"
         onClick={onSave}
         disabled={isSaving}
       >
-        {isSaving ? "Saving..." : "Save Changes"}
+        {isSaving ? "שומר..." : "שמור שינויים"}
       </Button>
     </div>
   );
