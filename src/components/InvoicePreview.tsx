@@ -57,11 +57,11 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 <img 
                   src={logo} 
                   alt="Company Logo" 
-                  className="h-24 w-24 object-contain" 
+                  className="h-[400px] w-[400px] object-contain" 
                 />
               </div>
             ) : (
-              <div className="mb-3 h-24 w-24 bg-gray-200 mx-auto flex items-center justify-center">
+              <div className="mb-3 h-[400px] w-[400px] bg-gray-200 mx-auto flex items-center justify-center">
                 <span className="text-lg text-gray-500">לוגו</span>
               </div>
             )}
@@ -76,11 +76,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
             <div className="max-w-[400px] mx-auto">
               <Separator className="my-2" />
               <div className="text-center py-2">
-                <div className="inline-block border-2 border-black px-4 py-1">
-                  <span className="text-2xl font-bold">
-                    {currencySymbol} 785.8
-                  </span>
-                </div>
+                <span className="text-2xl font-bold">
+                  {currencySymbol} 00.0
+                </span>
               </div>
               <Separator className="my-2" />
             </div>
@@ -99,37 +97,37 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               {/* Invoice Items List */}
               <div className="py-2 space-y-2">
                 <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                  <div>{currencySymbol} 39.90</div>
+                  <div>{currencySymbol} 00.00</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
-                    <div className="font-bold">סוללות AA</div>
-                    <div className="text-xs text-gray-500">2160067</div>
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                  <div>{currencySymbol} 25.90</div>
+                  <div>{currencySymbol} 00.00</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
-                    <div className="font-bold">מקדח 6 מ"מ</div>
-                    <div className="text-xs text-gray-500">1144454</div>
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                  <div>{currencySymbol} 900.00</div>
+                  <div>{currencySymbol} 00.00</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
-                    <div className="font-bold">מקדח מקיטה 20V</div>
-                    <div className="text-xs text-gray-500">1145014</div>
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
                   </div>
                 </div>
                 
                 {/* Discount */}
                 <div className="grid grid-cols-3 gap-4 py-2 text-sm text-amber-500">
-                  <div>{currencySymbol} - 180.00</div>
+                  <div>{currencySymbol} -00.00</div>
                   <div className="text-center"></div>
-                  <div className="text-right">20% הנחת מבצע מקיטה</div>
+                  <div className="text-right">הנחת מבצע</div>
                 </div>
               </div>
             </div>
@@ -138,9 +136,8 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <Separator className="my-2" />
             </div>
 
-            {/* Payment Method with HR framing */}
-            <div className="text-center py-2">
-              <Separator className="my-2" />
+            {/* Payment Method with HR framing - aligned right, removed top HR */}
+            <div className="text-right py-2">
               <div className="py-2">
                 <div className="font-bold">אשראי</div>
                 <div className="text-sm">{currencySymbol}785.8 1 תשלומים: ****5644</div>
@@ -186,12 +183,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
             {/* Footer */}
             <div className="p-4 text-center">
-              {/* Footer Text framed with HRs */}
-              <Separator className="my-2" />
-              <p className="text-sm py-2 text-right">
-                בחתימתי אני מאשר את קבלת הטובין ואת תנאי מכירת הטובין.
-                <br />
-                המוצרים בצד המסכם, המחתום חלק בלתי נפרד ממסמך זה.
+              {/* Footer Text with lorem ipsum, removed top HR */}
+              <p className="text-sm py-2 text-center">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
               <Separator className="my-2" />
               
