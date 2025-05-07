@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -242,7 +243,7 @@ export default function CustomizationPanel({
       </div>
 
       <Button
-        className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] transition-colors"
+        className="w-full bg-[#34A853] hover:bg-[#2A8644] transition-colors"
         onClick={onSave}
         disabled={isSaving}
       >
