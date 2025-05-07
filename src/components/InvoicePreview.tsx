@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
@@ -44,7 +45,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-4xl font-bold text-gray-700">BANNER</span>
+              <span className="text-4xl font-bold text-gray-700">באנר</span>
             )}
           </div>
 
@@ -70,9 +71,9 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
             {/* Invoice Items */}
             <div className="py-2">
               <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-2">
-                <div>WORTH</div>
-                <div className="text-center">AMMOUNT</div>
-                <div className="text-right">ITEM NAME</div>
+                <div>סכום</div>
+                <div className="text-center">כמות</div>
+                <div className="text-right">פריט</div>
               </div>
               
               {[1, 2, 3].map((item, index) => (
@@ -80,8 +81,8 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                   <div>{currencySymbol} 49.90</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
-                    <div>ITEM NAME</div>
-                    <div className="text-xs text-gray-500">BARCODE</div>
+                    <div>פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
                   </div>
                 </div>
               ))}
@@ -90,7 +91,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <div className="grid grid-cols-3 gap-4 py-2 text-sm text-amber-500">
                 <div>{currencySymbol} - 15.00</div>
                 <div className="text-center"></div>
-                <div className="text-right">Discount Name</div>
+                <div className="text-right">הנחת מבצע</div>
               </div>
             </div>
 
@@ -183,7 +184,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-2xl font-bold text-gray-700">SECONDARY BANNER</span>
+                  <span className="text-2xl font-bold text-gray-700">באנר</span>
                 )}
               </div>
               
@@ -193,7 +194,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                   Powered By <span className="text-green-500 font-bold">COMAX</span>
                 </div>
                 <div className="text-blue-500">
-                  Download Original Doc
+                  הורד מסמך מקור
                 </div>
               </div>
             </div>
