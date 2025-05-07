@@ -49,10 +49,14 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
             )}
           </div>
 
-          {/* Company Logo */}
-          <div className="p-6 text-center">
+          {/* Company & Branch Information */}
+          <div className="p-4 text-center">
+            <h2 className="text-xl font-bold mb-1">שם החברה</h2>
+            <h3 className="text-md">שם הסניף</h3>
+            
+            {/* Company Logo */}
             {logo && (
-              <div className="mb-4 flex justify-center">
+              <div className="mt-3 flex justify-center">
                 <img 
                   src={logo} 
                   alt="Company Logo" 
