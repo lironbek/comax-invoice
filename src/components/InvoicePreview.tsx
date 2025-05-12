@@ -57,11 +57,11 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 <img 
                   src={logo} 
                   alt="Company Logo" 
-                  className="h-[400px] w-[400px] object-contain" 
+                  className="h-[300px] w-[300px] object-contain" 
                 />
               </div>
             ) : (
-              <div className="mb-3 h-[400px] w-[400px] bg-gray-200 mx-auto flex items-center justify-center">
+              <div className="mb-3 h-[300px] w-[300px] bg-gray-200 mx-auto flex items-center justify-center">
                 <span className="text-lg text-gray-500">לוגו</span>
               </div>
             )}
