@@ -1,9 +1,9 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Facebook, Instagram, MessageSquare, X } from "lucide-react";
+import { Facebook, Instagram, MessageSquare, X, Upload } from "lucide-react";
+import { useState } from "react";
 
 interface CustomizationPanelProps {
   settings: InvoiceSettings;
@@ -22,120 +22,133 @@ export default function CustomizationPanel({
   onSave,
   isSaving
 }: CustomizationPanelProps) {
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
-    const file = e.target.files?.[0];
+  const [dragStates, setDragStates] = useState({
+    bannerImage: false,
+    secondaryBannerImage: false,
+    logo: false
+  });
+
+  const handleFileUpload = (file: File, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
     if (!file) return;
     const imageUrl = URL.createObjectURL(file);
     onSettingsChange({ [field]: imageUrl });
   };
 
+  const handleInputFileUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileUpload(file, field);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: true }));
+  };
+
+  const handleDragLeave = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+  };
+
+  const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        handleFileUpload(file, field);
+      }
+    }
+  };
+
+  const DragDropArea = ({ 
+    field, 
+    title, 
+    inputId, 
+    hasImage, 
+    description 
+  }: {
+    field: 'bannerImage' | 'secondaryBannerImage' | 'logo';
+    title: string;
+    inputId: string;
+    hasImage: boolean;
+    description: string;
+  }) => (
+    <div className="space-y-2">
+      <Label htmlFor={inputId} className="font-medium">
+        {title}
+      </Label>
+      <div
+        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+          dragStates[field] 
+            ? 'border-green-500 bg-green-50' 
+            : 'border-gray-300 hover:border-gray-400'
+        }`}
+        onDragOver={(e) => handleDragOver(e, field)}
+        onDragLeave={(e) => handleDragLeave(e, field)}
+        onDrop={(e) => handleDrop(e, field)}
+        onClick={() => document.getElementById(inputId)?.click()}
+      >
+        <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+        <p className="text-sm text-gray-600 mb-1">
+          Drag & drop an image here, or click to browse
+        </p>
+        <p className="text-xs text-gray-500">{description}</p>
+        {hasImage && (
+          <div className="flex items-center justify-center mt-3">
+            <span className="text-sm text-green-600 mr-2">✓ Image uploaded</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onFileRemove(field);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        <input
+          type="file"
+          id={inputId}
+          className="sr-only"
+          accept="image/*"
+          onChange={(e) => handleInputFileUpload(e, field)}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="banner-upload" className="font-medium">
-            Promotional Banner
-          </Label>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="outline"
-              className="relative overflow-hidden"
-              onClick={() => document.getElementById("banner-upload")?.click()}
-            >
-              Upload Banner
-              <input
-                type="file"
-                id="banner-upload"
-                className="sr-only"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'bannerImage')}
-              />
-            </Button>
-            <span className="text-sm text-muted-foreground flex-1">
-              {settings.bannerImage ? 'Image uploaded' : 'No file selected'}
-            </span>
-            {settings.bannerImage && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onFileRemove('bannerImage')}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x200px, max 2MB</p>
-        </div>
+        <DragDropArea
+          field="bannerImage"
+          title="Promotional Banner"
+          inputId="banner-upload"
+          hasImage={!!settings.bannerImage}
+          description="Recommended size: 800x200px, max 2MB"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="logo-upload" className="font-medium">
-            Company Logo
-          </Label>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="outline"
-              className="relative overflow-hidden"
-              onClick={() => document.getElementById("logo-upload")?.click()}
-            >
-              Upload Logo
-              <input
-                type="file"
-                id="logo-upload"
-                className="sr-only"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'logo')}
-              />
-            </Button>
-            <span className="text-sm text-muted-foreground flex-1">
-              {settings.logo ? 'Image uploaded' : 'No file selected'}
-            </span>
-            {settings.logo && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onFileRemove('logo')}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 200x200px, max 1MB</p>
-        </div>
+        <DragDropArea
+          field="logo"
+          title="Company Logo"
+          inputId="logo-upload"
+          hasImage={!!settings.logo}
+          description="Recommended size: 200x200px, max 1MB"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="secondary-banner-upload" className="font-medium">
-            Secondary Banner
-          </Label>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="outline"
-              className="relative overflow-hidden"
-              onClick={() => document.getElementById("secondary-banner-upload")?.click()}
-            >
-              Upload Secondary Banner
-              <input
-                type="file"
-                id="secondary-banner-upload"
-                className="sr-only"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'secondaryBannerImage')}
-              />
-            </Button>
-            <span className="text-sm text-muted-foreground flex-1">
-              {settings.secondaryBannerImage ? 'Image uploaded' : 'No file selected'}
-            </span>
-            {settings.secondaryBannerImage && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onFileRemove('secondaryBannerImage')}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x100px, max 1MB</p>
-        </div>
+        <DragDropArea
+          field="secondaryBannerImage"
+          title="Secondary Banner"
+          inputId="secondary-banner-upload"
+          hasImage={!!settings.secondaryBannerImage}
+          description="Recommended size: 800x100px, max 1MB"
+        />
 
         <div className="space-y-4">
           <Label className="font-medium">Colors</Label>
