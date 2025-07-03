@@ -2,12 +2,20 @@
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
+import { useState } from "react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
+  onSettingsChange?: (settings: Partial<InvoiceSettings>) => void;
 }
 
-export default function InvoicePreview({ settings }: InvoicePreviewProps) {
+export default function InvoicePreview({ settings, onSettingsChange }: InvoicePreviewProps) {
+  const [dragStates, setDragStates] = useState({
+    bannerImage: false,
+    secondaryBannerImage: false,
+    logo: false
+  });
+
   const { 
     bannerImage, 
     secondaryBannerImage,
@@ -23,6 +31,38 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
+  const handleFileUpload = (file: File, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    if (!file || !onSettingsChange) return;
+    const imageUrl = URL.createObjectURL(file);
+    onSettingsChange({ [field]: imageUrl });
+  };
+
+  const handleDragOver = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    if (!onSettingsChange) return;
+    setDragStates(prev => ({ ...prev, [field]: true }));
+  };
+
+  const handleDragLeave = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+  };
+
+  const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+    
+    if (!onSettingsChange) return;
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        handleFileUpload(file, field);
+      }
+    }
+  };
+
   return (
     <div 
       className="w-full overflow-hidden p-6"
@@ -37,7 +77,14 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
           style={{ backgroundColor }}
         >
           {/* Banner Image */}
-          <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden">
+          <div 
+            className={`w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden cursor-pointer transition-colors ${
+              dragStates.bannerImage ? 'bg-green-100 border-2 border-green-500 border-dashed' : ''
+            }`}
+            onDragOver={(e) => handleDragOver(e, 'bannerImage')}
+            onDragLeave={(e) => handleDragLeave(e, 'bannerImage')}
+            onDrop={(e) => handleDrop(e, 'bannerImage')}
+          >
             {bannerImage ? (
               <img 
                 src={bannerImage} 
@@ -52,19 +99,26 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
           {/* Company & Branch Information */}
           <div className="p-4 text-center">
             {/* Company Logo - Now positioned above company name */}
-            {logo ? (
-              <div className="mb-3 flex justify-center">
+            <div
+              className={`mb-3 flex justify-center cursor-pointer transition-colors ${
+                dragStates.logo ? 'bg-green-100 border-2 border-green-500 border-dashed rounded-lg p-2' : ''
+              }`}
+              onDragOver={(e) => handleDragOver(e, 'logo')}
+              onDragLeave={(e) => handleDragLeave(e, 'logo')}
+              onDrop={(e) => handleDrop(e, 'logo')}
+            >
+              {logo ? (
                 <img 
                   src={logo} 
                   alt="Company Logo" 
-                  className="h-[300px] w-[300px] object-contain" 
+                  className="h-[150px] w-[150px] object-contain" 
                 />
-              </div>
-            ) : (
-              <div className="mb-3 h-[300px] w-[300px] bg-gray-200 mx-auto flex items-center justify-center">
-                <span className="text-lg text-gray-500">לוגו</span>
-              </div>
-            )}
+              ) : (
+                <div className="h-[150px] w-[150px] bg-gray-200 flex items-center justify-center">
+                  <span className="text-lg text-gray-500">לוגו</span>
+                </div>
+              )}
+            </div>
             
             <h2 className="text-xl font-bold mb-1">שם החברה</h2>
             <h3 className="text-md">שם הסניף</h3>
@@ -72,15 +126,11 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
           {/* Main Content */}
           <div className="px-8">
-            {/* Total Sum Frame at top with HRs */}
-            <div className="max-w-[400px] mx-auto">
-              <Separator className="my-2" />
-              <div className="text-center py-2">
-                <span className="text-2xl font-bold">
-                  {currencySymbol} 00.0
-                </span>
-              </div>
-              <Separator className="my-2" />
+            {/* Total Sum - removed frame */}
+            <div className="text-center py-4">
+              <span className="text-2xl font-bold">
+                {currencySymbol} 00.0
+              </span>
             </div>
 
             {/* Invoice Items Header */}
@@ -136,7 +186,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               <Separator className="my-2" />
             </div>
 
-            {/* Payment Method with HR framing - aligned right, removed top HR */}
+            {/* Payment Method - aligned right, removed top HR */}
             <div className="text-right py-2">
               <div className="py-2">
                 <div className="font-bold">אשראי</div>
@@ -183,7 +233,7 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
 
             {/* Footer */}
             <div className="p-4 text-center">
-              {/* Footer Text with lorem ipsum, removed top HR */}
+              {/* Footer Text - one line lorem ipsum, centered, removed top HR */}
               <p className="text-sm py-2 text-center">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -246,7 +296,14 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
               )}
 
               {/* Secondary Banner */}
-              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
+              <div 
+                className={`w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4 cursor-pointer transition-colors ${
+                  dragStates.secondaryBannerImage ? 'bg-green-100 border-2 border-green-500 border-dashed' : ''
+                }`}
+                onDragOver={(e) => handleDragOver(e, 'secondaryBannerImage')}
+                onDragLeave={(e) => handleDragLeave(e, 'secondaryBannerImage')}
+                onDrop={(e) => handleDrop(e, 'secondaryBannerImage')}
+              >
                 {secondaryBannerImage ? (
                   <img 
                     src={secondaryBannerImage} 
