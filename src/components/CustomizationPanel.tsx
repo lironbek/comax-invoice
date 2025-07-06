@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, MessageSquare, X, Upload } from "lucide-react";
 import { useState } from "react";
 import PresetManager from "./PresetManager";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AVAILABLE_FONTS } from "@/types/presets";
 
 interface CustomizationPanelProps {
   settings: InvoiceSettings;
@@ -63,6 +71,10 @@ export default function CustomizationPanel({
         handleFileUpload(file, field);
       }
     }
+  };
+
+  const handleFontChange = (font: string) => {
+    onSettingsChange({ font });
   };
 
   const DragDropArea = ({ 
@@ -155,6 +167,22 @@ export default function CustomizationPanel({
           hasImage={!!settings.secondaryBannerImage}
           description="Recommended size: 800x100px, max 1MB"
         />
+
+        <div className="space-y-2">
+          <Label className="font-medium">Font Selection</Label>
+          <Select value={settings.font} onValueChange={handleFontChange}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {AVAILABLE_FONTS.map((font) => (
+                <SelectItem key={font} value={font}>
+                  <span style={{ fontFamily: font }}>{font}</span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         <div className="space-y-4">
           <Label className="font-medium">Colors</Label>

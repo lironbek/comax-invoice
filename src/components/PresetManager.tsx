@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Trash2, Save } from "lucide-react";
-import { DesignPreset, SYSTEM_PRESETS, AVAILABLE_FONTS } from "@/types/presets";
+import { DesignPreset, SYSTEM_PRESETS } from "@/types/presets";
 import { InvoiceSettings } from "./InvoiceCustomizer";
 
 interface PresetManagerProps {
@@ -67,10 +66,6 @@ export default function PresetManager({ settings, onSettingsChange }: PresetMana
 
   const handleDeletePreset = (presetId: string) => {
     setCustomPresets(prev => prev.filter(p => p.id !== presetId));
-  };
-
-  const handleFontChange = (font: string) => {
-    onSettingsChange({ font });
   };
 
   return (
@@ -154,23 +149,6 @@ export default function PresetManager({ settings, onSettingsChange }: PresetMana
             </DialogContent>
           </Dialog>
         </div>
-      </div>
-
-      {/* Font Selection */}
-      <div className="space-y-2">
-        <Label className="font-medium">Font Selection</Label>
-        <Select value={settings.font} onValueChange={handleFontChange}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {AVAILABLE_FONTS.map((font) => (
-              <SelectItem key={font} value={font}>
-                <span style={{ fontFamily: font }}>{font}</span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
     </div>
   );
