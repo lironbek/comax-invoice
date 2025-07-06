@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, MessageSquare, X, Upload } from "lucide-react";
 import { useState } from "react";
+import PresetManager from "./PresetManager";
 
 interface CustomizationPanelProps {
   settings: InvoiceSettings;
@@ -125,6 +126,11 @@ export default function CustomizationPanel({
 
   return (
     <div className="space-y-6">
+      <PresetManager 
+        settings={settings} 
+        onSettingsChange={onSettingsChange} 
+      />
+
       <div className="space-y-4">
         <DragDropArea
           field="bannerImage"
