@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceInterface";
 
 interface InvoiceReceiptProps {
@@ -161,7 +162,7 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
           <img 
             src="/lovable-uploads/8494e468-2f1b-47b8-8486-821a6b9ff1f7.png"
             alt="Barcode"
-            className="h-16 object-contain mb-2"
+            className="h-20 object-contain mb-2"
           />
         </div>
       </div>
