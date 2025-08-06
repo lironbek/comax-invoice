@@ -1,13 +1,15 @@
 
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
+import { Facebook, Instagram, MessageSquare, Barcode, Upload } from "lucide-react";
+import { useState } from "react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
+  onSettingsChange?: (newSettings: Partial<InvoiceSettings>) => void;
 }
 
-export default function InvoicePreview({ settings }: InvoicePreviewProps) {
+export default function InvoicePreview({ settings, onSettingsChange }: InvoicePreviewProps) {
   const { 
     bannerImage, 
     secondaryBannerImage,
@@ -19,9 +21,66 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
     socialMedia
   } = settings;
   
+  const [dragStates, setDragStates] = useState({
+    bannerImage: false,
+    logo: false,
+    secondaryBannerImage: false
+  });
+  
   const fontClass = `font-${font.toLowerCase()}`;
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
+
+  const handleDragOver = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: true }));
+  };
+
+  const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+  };
+
+  const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
+    e.preventDefault();
+    setDragStates(prev => ({ ...prev, [field]: false }));
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && onSettingsChange) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        onSettingsChange({ [field]: url });
+      }
+    }
+  };
+
+  const DropZone = ({ 
+    field, 
+    children, 
+    className 
+  }: { 
+    field: 'bannerImage' | 'secondaryBannerImage' | 'logo'; 
+    children: React.ReactNode; 
+    className?: string; 
+  }) => (
+    <div
+      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50' : ''}`}
+      onDragOver={(e) => handleDragOver(e, field)}
+      onDragLeave={(e) => handleDragLeave(e, field)}
+      onDrop={(e) => handleDrop(e, field)}
+    >
+      {children}
+      {dragStates[field] && (
+        <div className="absolute inset-0 bg-blue-50 bg-opacity-90 flex items-center justify-center z-10 rounded">
+          <div className="text-center">
+            <Upload className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+            <p className="text-sm text-blue-600 font-medium">Drop image here</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div 
@@ -36,35 +95,37 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
           className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
           style={{ backgroundColor }}
         >
-          {/* Banner Image */}
-          <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden">
-            {bannerImage ? (
-              <img 
-                src={bannerImage} 
-                alt="Invoice Banner" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-4xl font-bold text-gray-700">באנר</span>
-            )}
-          </div>
+          {/* Banner Image with Drop Zone */}
+          <DropZone field="bannerImage" className="w-full">
+            <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden">
+              {bannerImage ? (
+                <img 
+                  src={bannerImage} 
+                  alt="Invoice Banner" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-4xl font-bold text-gray-700">באנר</span>
+              )}
+            </div>
+          </DropZone>
 
           {/* Company & Branch Information */}
           <div className="p-4 text-center">
-            {/* Company Logo - Now positioned above company name */}
-            {logo ? (
-              <div className="mb-3 flex justify-center">
+            {/* Company Logo with Drop Zone - Now positioned above company name */}
+            <DropZone field="logo" className="mb-3 flex justify-center">
+              {logo ? (
                 <img 
                   src={logo} 
                   alt="Company Logo" 
                   className="h-[300px] w-[300px] object-contain" 
                 />
-              </div>
-            ) : (
-              <div className="mb-3 h-[300px] w-[300px] bg-gray-200 mx-auto flex items-center justify-center">
-                <span className="text-lg text-gray-500">לוגו</span>
-              </div>
-            )}
+              ) : (
+                <div className="h-[300px] w-[300px] bg-gray-200 flex items-center justify-center rounded">
+                  <span className="text-lg text-gray-500">לוגו</span>
+                </div>
+              )}
+            </DropZone>
             
             <h2 className="text-xl font-bold mb-1">שם החברה</h2>
             <h3 className="text-md">שם הסניף</h3>
@@ -245,18 +306,20 @@ export default function InvoicePreview({ settings }: InvoicePreviewProps) {
                 </>
               )}
 
-              {/* Secondary Banner */}
-              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
-                {secondaryBannerImage ? (
-                  <img 
-                    src={secondaryBannerImage} 
-                    alt="Secondary Banner" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-2xl font-bold text-gray-700">באנר</span>
-                )}
-              </div>
+              {/* Secondary Banner with Drop Zone */}
+              <DropZone field="secondaryBannerImage" className="w-full">
+                <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4 rounded">
+                  {secondaryBannerImage ? (
+                    <img 
+                      src={secondaryBannerImage} 
+                      alt="Secondary Banner" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold text-gray-700">באנר</span>
+                  )}
+                </div>
+              </DropZone>
               
               {/* Powered By Footer */}
               <div className="flex justify-between items-center text-sm mt-6">

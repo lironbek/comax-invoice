@@ -82,7 +82,7 @@ export default function InvoiceCustomizer() {
                 Preview how your invoice will look to customers
               </p>
             </div>
-            <InvoicePreview settings={settings} />
+            <InvoicePreview settings={settings} onSettingsChange={handleSettingsChange} />
           </Card>
         </div>
         
