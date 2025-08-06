@@ -1,18 +1,12 @@
-import { InvoiceSettings } from "./InvoiceCustomizer";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Facebook, Instagram, MessageSquare, X, Upload } from "lucide-react";
-import { useState } from "react";
-import PresetManager from "./PresetManager";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { AVAILABLE_FONTS } from "@/types/presets";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trash2, Upload, Save, RotateCcw } from "lucide-react";
+import { InvoiceSettings } from "./InvoiceCustomizer";
+import { AVAILABLE_FONTS, SYSTEM_PRESETS } from "@/types/presets";
 
 interface CustomizationPanelProps {
   settings: InvoiceSettings;
@@ -21,6 +15,7 @@ interface CustomizationPanelProps {
   onFileRemove: (field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => void;
   onSave: () => void;
   isSaving: boolean;
+  onReset?: () => void;
 }
 
 export default function CustomizationPanel({
@@ -29,8 +24,20 @@ export default function CustomizationPanel({
   onSocialMediaChange,
   onFileRemove,
   onSave,
-  isSaving
+  isSaving,
+  onReset
 }: CustomizationPanelProps) {
+  
+  const handlePresetSelect = (presetId: string) => {
+    const preset = SYSTEM_PRESETS.find(p => p.id === presetId);
+    if (preset) {
+      onSettingsChange({
+        backgroundColor: preset.backgroundColor,
+        font: preset.font
+      });
+    }
+  };
+
   const [dragStates, setDragStates] = useState({
     bannerImage: false,
     secondaryBannerImage: false,
@@ -73,54 +80,61 @@ export default function CustomizationPanel({
     }
   };
 
-  const handleFontChange = (font: string) => {
-    onSettingsChange({ font });
-  };
-
   const DragDropArea = ({ 
-    field, 
-    title, 
-    description,
-    currentImage
+    label,
+    file,
+    onFileUpload,
+    onInputFileUpload,
+    onRemove,
+    isDragOver,
+    onDragOver,
+    onDragLeave,
+    onDrop
   }: {
-    field: 'bannerImage' | 'secondaryBannerImage' | 'logo';
-    title: string;
-    description: string;
-    currentImage: string | null;
+    label: string;
+    file: string | null;
+    onFileUpload: (file: File) => void;
+    onInputFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onRemove: () => void;
+    isDragOver: boolean;
+    onDragOver: (e: React.DragEvent) => void;
+    onDragLeave: (e: React.DragEvent) => void;
+    onDrop: (e: React.DragEvent) => void;
   }) => {
-    const inputId = `${field}-upload`;
+    const inputId = `${label}-upload`;
     
     return (
       <div className="space-y-2">
+        <Label className="text-sm text-right">{label}</Label>
         <div
           className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
-            dragStates[field] 
-              ? 'border-primary bg-primary/5' 
+            isDragOver 
+              ? 'border-green-500 bg-green-50' 
               : 'border-gray-300 hover:border-gray-400'
           }`}
-          onDragOver={(e) => handleDragOver(e, field)}
-          onDragLeave={(e) => handleDragLeave(e, field)}
-          onDrop={(e) => handleDrop(e, field)}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
           onClick={() => document.getElementById(inputId)?.click()}
         >
-          <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-          <p className="text-sm text-gray-600 mb-1 font-hebrew">
-            {title}
-          </p>
-          <p className="text-xs text-gray-500">{description}</p>
-          {currentImage && (
-            <div className="flex items-center justify-center mt-3">
-              <span className="text-sm text-green-600 mr-2">✓ תמונה הועלתה</span>
+          {file ? (
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm text-green-600">✓ תמונה הועלתה</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onFileRemove(field);
+                  onRemove();
                 }}
               >
-                <X className="h-4 w-4" />
+                <Trash2 className="h-4 w-4" />
               </Button>
+            </div>
+          ) : (
+            <div>
+              <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
+              <p className="text-sm text-gray-600">גרור קובץ או לחץ להעלאה</p>
             </div>
           )}
           <input
@@ -128,7 +142,7 @@ export default function CustomizationPanel({
             id={inputId}
             className="sr-only"
             accept="image/*"
-            onChange={(e) => handleInputFileUpload(e, field)}
+            onChange={onInputFileUpload}
           />
         </div>
       </div>
@@ -136,155 +150,181 @@ export default function CustomizationPanel({
   };
 
   return (
-    <div className="space-y-6 rtl">
-      {/* Header */}
-      <div className="text-center pb-4 border-b">
-        <h2 className="text-lg font-semibold font-hebrew">התאמה אישית</h2>
-        <p className="text-sm text-muted-foreground">התאם את החשבונית לפי הטעם שלך</p>
-      </div>
-
-      {/* Preset Manager */}
-      <div>
-        <Label className="font-medium mb-3 block font-hebrew">טמפלטים</Label>
+    <Card className="w-full bg-white border border-gray-200 shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold text-right">ניהול עיצוב</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Template Selection Dropdown */}
         <div className="space-y-2">
-          <p className="text-sm text-gray-600">זרקן ווקי</p>
-          <PresetManager 
-            settings={settings} 
-            onSettingsChange={onSettingsChange}
-          />
+          <Label className="text-sm font-medium text-right">תבניות עיצוב</Label>
+          <Select onValueChange={handlePresetSelect}>
+            <SelectTrigger className="w-full text-right">
+              <SelectValue placeholder="בחר תבנית עיצוב" />
+            </SelectTrigger>
+            <SelectContent>
+              {SYSTEM_PRESETS.map((preset) => (
+                <SelectItem key={preset.id} value={preset.id} className="text-right">
+                  {preset.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      </div>
 
-      {/* Logo and Banners */}
-      <div className="space-y-4">
-        <Label className="font-medium mb-2 block font-hebrew">לוגו ובאנרים</Label>
-        <p className="text-sm text-muted-foreground mb-3">
-          באפשרותך להעלות את הלוגו או הבאנר שירצית לחצוגה
-        </p>
-        
-        <div className="space-y-3">
-          <DragDropArea 
-            field="bannerImage"
-            currentImage={settings.bannerImage}
-            title="גרור ושחרר קלק א בוקצ קגא"
-            description="גודל מומלץ 200x200px, מקסימום 1MB"
-          />
-          
-          <DragDropArea 
-            field="logo"
-            currentImage={settings.logo}
-            title="לוגו"
-            description="גודל מומלץ 200x200px, מקסימום 1MB"
-          />
-          
-          <DragDropArea 
-            field="secondaryBannerImage"
-            currentImage={settings.secondaryBannerImage}
-            title="באנר תחתון"
-            description="גודל מומלץ 200x200px, מקסימום 1MB"
-          />
-        </div>
-      </div>
-
-      {/* Font Selection */}
-      <div className="space-y-2">
-        <Label className="font-medium font-hebrew">גופן</Label>
-        <Select value={settings.font} onValueChange={handleFontChange}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {AVAILABLE_FONTS.map((font) => (
-              <SelectItem key={font} value={font}>
-                <span style={{ fontFamily: font }}>{font}</span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Colors */}
-      <div className="space-y-4">
-        <Label className="font-medium font-hebrew">צבעים</Label>
-        
+        {/* Logo and Banner Upload */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Input
-              type="color"
-              value={settings.backgroundColor}
-              onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
-              className="w-8 h-8 p-0 border-0 rounded"
+          <Label className="text-sm font-medium text-right block">תמונות</Label>
+          <div className="space-y-3">
+            <DragDropArea
+              label="בנר עליון"
+              file={settings.bannerImage}
+              onFileUpload={(file) => handleFileUpload(file, 'bannerImage')}
+              onInputFileUpload={(e) => handleInputFileUpload(e, 'bannerImage')}
+              onRemove={() => onFileRemove('bannerImage')}
+              isDragOver={dragStates.bannerImage}
+              onDragOver={(e) => handleDragOver(e, 'bannerImage')}
+              onDragLeave={(e) => handleDragLeave(e, 'bannerImage')}
+              onDrop={(e) => handleDrop(e, 'bannerImage')}
             />
-            <Label className="text-sm font-hebrew">רקע</Label>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Input
-              type="color"
-              value={settings.textColor}
-              onChange={(e) => onSettingsChange({ textColor: e.target.value })}
-              className="w-8 h-8 p-0 border-0 rounded"
+            <DragDropArea
+              label="לוגו"
+              file={settings.logo}
+              onFileUpload={(file) => handleFileUpload(file, 'logo')}
+              onInputFileUpload={(e) => handleInputFileUpload(e, 'logo')}
+              onRemove={() => onFileRemove('logo')}
+              isDragOver={dragStates.logo}
+              onDragOver={(e) => handleDragOver(e, 'logo')}
+              onDragLeave={(e) => handleDragLeave(e, 'logo')}
+              onDrop={(e) => handleDrop(e, 'logo')}
             />
-            <Label className="text-sm font-hebrew">טקסט</Label>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Input
-              type="color"
-              value={settings.discountColor}
-              onChange={(e) => onSettingsChange({ discountColor: e.target.value })}
-              className="w-8 h-8 p-0 border-0 rounded"
-            />
-            <Label className="text-sm font-hebrew">הנחת מבצע</Label>
-          </div>
-        </div>
-      </div>
-
-      {/* Social Media */}
-      <div className="space-y-4">
-        <Label className="font-medium font-hebrew">קישור לרשתות החברתיות</Label>
-        
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Facebook className="h-5 w-5 text-blue-600 flex-shrink-0" />
-            <Input
-              placeholder="כתן כתובת URL"
-              value={settings.socialMedia.facebook}
-              onChange={(e) => onSocialMediaChange('facebook', e.target.value)}
-              className="flex-1"
-            />
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Instagram className="h-5 w-5 text-pink-600 flex-shrink-0" />
-            <Input
-              placeholder="כתן כתובת URL"
-              value={settings.socialMedia.instagram}
-              onChange={(e) => onSocialMediaChange('instagram', e.target.value)}
-              className="flex-1"
-            />
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-gray-600 flex-shrink-0" />
-            <Input
-              placeholder="כתן כתובת URL"
-              value={settings.socialMedia.tiktok}
-              onChange={(e) => onSocialMediaChange('tiktok', e.target.value)}
-              className="flex-1"
+            <DragDropArea
+              label="בנר תחתון"
+              file={settings.secondaryBannerImage}
+              onFileUpload={(file) => handleFileUpload(file, 'secondaryBannerImage')}
+              onInputFileUpload={(e) => handleInputFileUpload(e, 'secondaryBannerImage')}
+              onRemove={() => onFileRemove('secondaryBannerImage')}
+              isDragOver={dragStates.secondaryBannerImage}
+              onDragOver={(e) => handleDragOver(e, 'secondaryBannerImage')}
+              onDragLeave={(e) => handleDragLeave(e, 'secondaryBannerImage')}
+              onDrop={(e) => handleDrop(e, 'secondaryBannerImage')}
             />
           </div>
         </div>
-      </div>
 
-      {/* Save Button */}
-      <Button 
-        onClick={onSave} 
-        disabled={isSaving}
-        className="w-full bg-primary hover:bg-primary/90 text-white font-hebrew"
-      >
-        {isSaving ? "שמירה..." : "שמור שינויים"}
-      </Button>
-    </div>
+        {/* Font Selection */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-right">גופן</Label>
+          <Select value={settings.font} onValueChange={(value) => onSettingsChange({ font: value })}>
+            <SelectTrigger className="w-full text-right">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {AVAILABLE_FONTS.map((font) => (
+                <SelectItem key={font} value={font} className="text-right">
+                  {font}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Color Customization */}
+        <div className="space-y-4">
+          <Label className="text-sm font-medium text-right block">צבעים</Label>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Input
+                type="color"
+                value={settings.backgroundColor}
+                onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
+                className="w-12 h-8 border rounded cursor-pointer"
+              />
+              <Label className="text-sm text-right">צבע רקע</Label>
+            </div>
+            <div className="flex items-center justify-between">
+              <Input
+                type="color"
+                value={settings.textColor}
+                onChange={(e) => onSettingsChange({ textColor: e.target.value })}
+                className="w-12 h-8 border rounded cursor-pointer"
+              />
+              <Label className="text-sm text-right">צבע טקסט</Label>
+            </div>
+            <div className="flex items-center justify-between">
+              <Input
+                type="color"
+                value={settings.discountColor}
+                onChange={(e) => onSettingsChange({ discountColor: e.target.value })}
+                className="w-12 h-8 border rounded cursor-pointer"
+              />
+              <Label className="text-sm text-right">צבע הנחה</Label>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Media Links */}
+        <div className="space-y-4">
+          <Label className="text-sm font-medium text-right block">קישורי רשתות חברתיות</Label>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label className="text-xs text-right block">פייסבוק</Label>
+              <Input
+                type="url"
+                placeholder="https://facebook.com/yourpage"
+                value={settings.socialMedia.facebook}
+                onChange={(e) => onSocialMediaChange('facebook', e.target.value)}
+                className="text-right"
+                dir="ltr"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-right block">אינסטגרם</Label>
+              <Input
+                type="url"
+                placeholder="https://instagram.com/yourpage"
+                value={settings.socialMedia.instagram}
+                onChange={(e) => onSocialMediaChange('instagram', e.target.value)}
+                className="text-right"
+                dir="ltr"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-right block">טיקטוק</Label>
+              <Input
+                type="url"
+                placeholder="https://tiktok.com/@yourpage"
+                value={settings.socialMedia.tiktok}
+                onChange={(e) => onSocialMediaChange('tiktok', e.target.value)}
+                className="text-right"
+                dir="ltr"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Save and Reset Buttons */}
+        <div className="flex gap-3">
+          <Button 
+            onClick={onSave} 
+            disabled={isSaving}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg"
+          >
+            <Save className="h-4 w-4 ml-2" />
+            שמור עיצוב
+          </Button>
+          {onReset && (
+            <Button 
+              onClick={onReset}
+              variant="outline"
+              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg"
+            >
+              <RotateCcw className="h-4 w-4 ml-2" />
+              איפוס
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

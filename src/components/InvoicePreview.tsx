@@ -85,10 +85,12 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-300 rounded mx-auto mb-2 flex items-center justify-center">
-                <span className="text-xs text-gray-500">תמונה</span>
-              </div>
+            <div className="text-center flex items-center justify-center w-full h-full">
+              <img 
+                src="/lovable-uploads/881255c3-91d5-4cce-b605-bd175f066a45.png" 
+                alt="Banner Placeholder"
+                className="w-16 h-16 opacity-60"
+              />
             </div>
           )}
         </div>
@@ -259,9 +261,13 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                   href={socialMedia.facebook} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800"
+                  className="hover:opacity-80"
                 >
-                  <Facebook size={24} />
+                  <img 
+                    src="/lovable-uploads/bfbb1a98-4c4a-4d73-9ae0-9424333155ab.png" 
+                    alt="Facebook"
+                    className="w-8 h-8"
+                  />
                 </a>
               )}
               {socialMedia.instagram && (
@@ -269,9 +275,13 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                   href={socialMedia.instagram} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-pink-600 hover:text-pink-800"
+                  className="hover:opacity-80"
                 >
-                  <Instagram size={24} />
+                  <img 
+                    src="/lovable-uploads/7964a1b1-6eea-43f5-a03f-ba8cb2672fd3.png" 
+                    alt="Instagram"
+                    className="w-8 h-8"
+                  />
                 </a>
               )}
               {socialMedia.tiktok && (
@@ -279,9 +289,13 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                   href={socialMedia.tiktok} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-black hover:text-gray-800"
+                  className="hover:opacity-80"
                 >
-                  <MessageSquare size={24} />
+                  <img 
+                    src="/lovable-uploads/90e62324-d9b5-4e8f-b3df-c1423b87ed43.png" 
+                    alt="TikTok"
+                    className="w-8 h-8"
+                  />
                 </a>
               )}
             </div>
@@ -303,11 +317,13 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gray-300 rounded mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-xs text-gray-500">תמונה</span>
-                </div>
-              </div>
+            <div className="text-center flex items-center justify-center w-full h-full">
+              <img 
+                src="/lovable-uploads/881255c3-91d5-4cce-b605-bd175f066a45.png" 
+                alt="Banner Placeholder"
+                className="w-16 h-16 opacity-60"
+              />
+            </div>
             )}
           </div>
           
