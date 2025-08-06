@@ -108,7 +108,7 @@ export default function EditingSidebar({
           />
         ) : (
           <img 
-            src="/lovable-uploads/3a789a5e-7185-419c-84e7-cd7f3bb91059.png" 
+            src="/lovable-uploads/b4e45a56-ff10-4f6e-90e8-95d04d396c1c.png" 
             alt="Placeholder"
             className="w-16 h-16 mx-auto mb-2 opacity-50"
           />
@@ -285,7 +285,7 @@ export default function EditingSidebar({
         >
           <RotateCcw className="w-4 h-4" />
           אפס הכל
-        </Button>
+        </button>
       </div>
     </div>
   );
