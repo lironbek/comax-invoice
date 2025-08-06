@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -152,36 +151,34 @@ export default function EditingSidebar({
         <div>
           <Label className="text-base font-medium mb-3 block text-receipt-text">צבעים</Label>
           <div className="space-y-4">
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-receipt-text">רקע</Label>
-                <input
-                  type="color"
-                  value={settings.backgroundColor}
-                  onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-receipt-text">טקסט</Label>
-                <input
-                  type="color"
-                  value={settings.textColor}
-                  onChange={(e) => handleColorChange('textColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
-                <input
-                  type="color"
-                  value={settings.promotionTextColor}
-                  onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
+            <div className="flex items-center gap-3">
+              <Label className="text-sm text-receipt-text">רקע</Label>
+              <input
+                type="color"
+                value={settings.backgroundColor}
+                onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Label className="text-sm text-receipt-text">טקסט</Label>
+              <input
+                type="color"
+                value={settings.textColor}
+                onChange={(e) => handleColorChange('textColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
+              <input
+                type="color"
+                value={settings.promotionTextColor}
+                onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
             </div>
           </div>
         </div>
