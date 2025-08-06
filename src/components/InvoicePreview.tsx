@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Upload } from "lucide-react";
@@ -33,18 +34,22 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log("Drag over event triggered");
   };
 
   const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log(`Drag enter for field: ${field}`);
     setDragStates(prev => ({ ...prev, [field]: true }));
   };
 
   const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
-    // Only set drag state to false if we're leaving the drop zone entirely
+    console.log(`Drag leave for field: ${field}`);
+    
+    // Check if we're actually leaving the element
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
@@ -57,15 +62,24 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
     e.preventDefault();
     e.stopPropagation();
+    console.log(`Drop event for field: ${field}`, e.dataTransfer.files);
+    
     setDragStates(prev => ({ ...prev, [field]: false }));
     
     const files = e.dataTransfer.files;
     if (files.length > 0 && onSettingsChange) {
       const file = files[0];
+      console.log(`File type: ${file.type}, File name: ${file.name}`);
+      
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
+        console.log(`Created URL: ${url}`);
         onSettingsChange({ [field]: url });
+      } else {
+        console.log("File is not an image");
       }
+    } else {
+      console.log("No files or onSettingsChange not available", { files: files.length, onSettingsChange: !!onSettingsChange });
     }
   };
 
@@ -79,11 +93,12 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     className?: string; 
   }) => (
     <div
-      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200`}
+      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200 cursor-pointer`}
       onDragOver={handleDragOver}
       onDragEnter={(e) => handleDragEnter(e, field)}
       onDragLeave={(e) => handleDragLeave(e, field)}
       onDrop={(e) => handleDrop(e, field)}
+      onClick={() => console.log(`Click on ${field} drop zone`)}
     >
       {children}
       {dragStates[field] && (
