@@ -1,4 +1,5 @@
 
+
 import { InvoiceSettings } from "./InvoiceInterface";
 
 interface InvoiceReceiptProps {
@@ -56,45 +57,45 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
       <div className="px-6 pb-4">
         {/* Headers */}
         <div className="grid grid-cols-3 gap-4 text-sm font-medium text-receipt-text border-b border-receipt-divider pb-2 mb-3">
-          <div className="text-right">סכום</div>
-          <div className="text-center">כמות</div>
           <div className="text-right">פריט</div>
+          <div className="text-center">כמות</div>
+          <div className="text-left">סכום</div>
         </div>
 
         {/* Items */}
         <div className="space-y-2 text-sm">
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-right text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-right text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-right text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
 
           {/* Discount */}
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-right" style={{ color: settings.promotionTextColor }}>₪00.00-</div>
-            <div className="text-center"></div>
             <div className="text-right" style={{ color: settings.promotionTextColor }}>הנחת מבצע</div>
+            <div className="text-center"></div>
+            <div className="text-left" style={{ color: settings.promotionTextColor }}>₪00.00-</div>
           </div>
         </div>
       </div>
@@ -195,3 +196,4 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
     </div>
   );
 }
+
