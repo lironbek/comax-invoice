@@ -24,6 +24,15 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				receipt: {
+					green: 'hsl(var(--receipt-green))',
+					orange: 'hsl(var(--receipt-orange))',
+					text: 'hsl(var(--receipt-text))',
+					gray: 'hsl(var(--receipt-gray))',
+					lightgray: 'hsl(var(--receipt-lightgray))',
+					border: 'hsl(var(--receipt-border))',
+					divider: 'hsl(var(--receipt-divider))'
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

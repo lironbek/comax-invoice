@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&subset=hebrew&display=swap');
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 250 252 255; /* #FAFBFC */
+    --foreground: 27 37 52; /* #1B2534 */
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -33,6 +35,15 @@
     --ring: 136.3 64.2% 43.1%;
 
     --radius: 0.5rem;
+
+    /* Custom Receipt Colors */
+    --receipt-green: 94 62% 35%; /* #5EA30D */
+    --receipt-orange: 37 95% 46%; /* #E69409 */
+    --receipt-text: 210 36% 14%; /* #1B2534 */
+    --receipt-gray: 220 12% 56%; /* #818892 */
+    --receipt-lightgray: 216 25% 97%; /* #F6F7F8 */
+    --receipt-border: 216 23% 95%; /* #F1F2F4 */
+    --receipt-divider: 220 19% 94%; /* #EEEFF2 */
 
     --sidebar-background: 0 0% 98%;
 
@@ -97,7 +108,19 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+}
+
+/* RTL Support */
+.rtl-container {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Assistant Font Classes */
+.font-assistant {
+  font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 @font-face {
