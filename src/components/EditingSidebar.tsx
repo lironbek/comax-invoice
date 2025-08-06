@@ -236,8 +236,8 @@ export default function EditingSidebar({
           disabled={isSaving}
           className="w-full bg-receipt-green hover:bg-receipt-green/90 text-white"
         >
-          <Save className="w-4 h-4 ml-2" />
           {isSaving ? "שומר..." : "שמור שינויים"}
+          <Save className="w-4 h-4 mr-2" />
         </Button>
         
         <Button 
@@ -245,16 +245,16 @@ export default function EditingSidebar({
           variant="outline" 
           className="w-full"
         >
-          <Plus className="w-4 h-4 ml-2" />
           צור טמפלט
+          <Plus className="w-4 h-4 mr-2" />
         </Button>
         
         <button 
           onClick={onReset}
           className="w-full text-sm text-receipt-gray hover:text-receipt-text flex items-center justify-center gap-2 py-2"
         >
-          <RotateCcw className="w-4 h-4" />
           אפס הכל
+          <RotateCcw className="w-4 h-4" />
         </button>
       </div>
     </div>
