@@ -2,16 +2,12 @@
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
-import { useState } from "react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
-  onSettingsChange?: (settings: Partial<InvoiceSettings>) => void;
 }
 
-export default function InvoicePreview({ settings, onSettingsChange }: InvoicePreviewProps) {
-  const [draggedField, setDraggedField] = useState<string | null>(null);
-  
+export default function InvoicePreview({ settings }: InvoicePreviewProps) {
   const { 
     bannerImage, 
     secondaryBannerImage,
@@ -27,45 +23,6 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
-  const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'logo' | 'secondaryBannerImage') => {
-    e.preventDefault();
-    setDraggedField(null);
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/') && onSettingsChange) {
-      const url = URL.createObjectURL(file);
-      onSettingsChange({ [field]: url });
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDragEnter = (e: React.DragEvent, field: string) => {
-    e.preventDefault();
-    setDraggedField(field);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDraggedField(null);
-  };
-
-  const handleFileUpload = (field: 'bannerImage' | 'logo' | 'secondaryBannerImage') => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file && onSettingsChange) {
-        const url = URL.createObjectURL(file);
-        onSettingsChange({ [field]: url });
-      }
-    };
-    input.click();
-  };
-
   return (
     <div 
       className="w-full overflow-hidden p-6"
@@ -79,17 +36,8 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
           className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
           style={{ backgroundColor }}
         >
-          {/* Banner Image with drag and drop */}
-          <div 
-            className={`w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden cursor-pointer transition-all ${
-              draggedField === 'bannerImage' ? 'border-4 border-blue-500 border-dashed bg-blue-50' : ''
-            }`}
-            onClick={() => onSettingsChange && handleFileUpload('bannerImage')}
-            onDrop={(e) => handleDrop(e, 'bannerImage')}
-            onDragOver={handleDragOver}
-            onDragEnter={(e) => handleDragEnter(e, 'bannerImage')}
-            onDragLeave={handleDragLeave}
-          >
+          {/* Banner Image */}
+          <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden">
             {bannerImage ? (
               <img 
                 src={bannerImage} 
@@ -97,47 +45,26 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="flex flex-col items-center">
-                <img 
-                  src="/lovable-uploads/b4e45a56-ff10-4f6e-90e8-95d04d396c1c.png" 
-                  alt="Placeholder"
-                  className="w-16 h-16 mb-2 opacity-50"
-                />
-                <span className="text-lg font-bold text-gray-700">באנר</span>
-              </div>
+              <span className="text-4xl font-bold text-gray-700">באנר</span>
             )}
           </div>
 
           {/* Company & Branch Information */}
           <div className="p-4 text-center">
-            {/* Company Logo with drag and drop */}
-            <div 
-              className={`mb-3 flex justify-center cursor-pointer transition-all ${
-                draggedField === 'logo' ? 'border-4 border-blue-500 border-dashed bg-blue-50 p-2 rounded' : ''
-              }`}
-              onClick={() => onSettingsChange && handleFileUpload('logo')}
-              onDrop={(e) => handleDrop(e, 'logo')}
-              onDragOver={handleDragOver}
-              onDragEnter={(e) => handleDragEnter(e, 'logo')}
-              onDragLeave={handleDragLeave}
-            >
-              {logo ? (
+            {/* Company Logo - Now positioned above company name */}
+            {logo ? (
+              <div className="mb-3 flex justify-center">
                 <img 
                   src={logo} 
                   alt="Company Logo" 
                   className="h-[300px] w-[300px] object-contain" 
                 />
-              ) : (
-                <div className="h-[300px] w-[300px] bg-gray-200 flex flex-col items-center justify-center rounded">
-                  <img 
-                    src="/lovable-uploads/b4e45a56-ff10-4f6e-90e8-95d04d396c1c.png" 
-                    alt="Placeholder"
-                    className="w-16 h-16 mb-2 opacity-50"
-                  />
-                  <span className="text-lg text-gray-500">לוגו</span>
-                </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="mb-3 h-[300px] w-[300px] bg-gray-200 mx-auto flex items-center justify-center">
+                <span className="text-lg text-gray-500">לוגו</span>
+              </div>
+            )}
             
             <h2 className="text-xl font-bold mb-1">שם החברה</h2>
             <h3 className="text-md">שם הסניף</h3>
@@ -318,17 +245,8 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                 </>
               )}
 
-              {/* Secondary Banner with drag and drop */}
-              <div 
-                className={`w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4 cursor-pointer transition-all ${
-                  draggedField === 'secondaryBannerImage' ? 'border-4 border-blue-500 border-dashed bg-blue-50' : ''
-                }`}
-                onClick={() => onSettingsChange && handleFileUpload('secondaryBannerImage')}
-                onDrop={(e) => handleDrop(e, 'secondaryBannerImage')}
-                onDragOver={handleDragOver}
-                onDragEnter={(e) => handleDragEnter(e, 'secondaryBannerImage')}
-                onDragLeave={handleDragLeave}
-              >
+              {/* Secondary Banner */}
+              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
                 {secondaryBannerImage ? (
                   <img 
                     src={secondaryBannerImage} 
@@ -336,14 +254,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="flex flex-col items-center">
-                    <img 
-                      src="/lovable-uploads/b4e45a56-ff10-4f6e-90e8-95d04d396c1c.png" 
-                      alt="Placeholder"
-                      className="w-12 h-12 mb-2 opacity-50"
-                    />
-                    <span className="text-lg font-bold text-gray-700">באנר</span>
-                  </div>
+                  <span className="text-2xl font-bold text-gray-700">באנר</span>
                 )}
               </div>
               
