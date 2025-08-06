@@ -153,7 +153,7 @@ export default function EditingSidebar({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">רקע</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <input
                   type="color"
                   value={settings.backgroundColor}
@@ -165,7 +165,7 @@ export default function EditingSidebar({
             
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">טקסט</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <input
                   type="color"
                   value={settings.textColor}
@@ -177,7 +177,7 @@ export default function EditingSidebar({
             
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <input
                   type="color"
                   value={settings.promotionTextColor}
