@@ -151,40 +151,34 @@ export default function EditingSidebar({
         <div>
           <Label className="text-base font-medium mb-3 block text-receipt-text">צבעים</Label>
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Label className="text-sm text-receipt-text">רקע</Label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="color"
-                  value={settings.backgroundColor}
-                  onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
+              <input
+                type="color"
+                value={settings.backgroundColor}
+                onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
             </div>
             
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Label className="text-sm text-receipt-text">טקסט</Label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="color"
-                  value={settings.textColor}
-                  onChange={(e) => handleColorChange('textColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
+              <input
+                type="color"
+                value={settings.textColor}
+                onChange={(e) => handleColorChange('textColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
             </div>
             
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
-              <div className="flex items-center gap-1">
-                <input
-                  type="color"
-                  value={settings.promotionTextColor}
-                  onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
-                  className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-                />
-              </div>
+              <input
+                type="color"
+                value={settings.promotionTextColor}
+                onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
+                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
+              />
             </div>
           </div>
         </div>
