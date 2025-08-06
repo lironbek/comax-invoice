@@ -1,5 +1,3 @@
-
-
 import { InvoiceSettings } from "./InvoiceInterface";
 
 interface InvoiceReceiptProps {
@@ -101,11 +99,14 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
       </div>
 
       {/* Payment Method */}
-      <div className="px-6 pb-4 border-t border-receipt-divider pt-4">
-        <div className="text-sm text-receipt-text">
-          <div className="font-medium mb-1">אשראי</div>
-          <div className="text-receipt-gray">תשלומים: 1 ****1234 ₪00.00</div>
+      <div className="px-6 pb-4">
+        <div className="border-t border-receipt-divider pt-4">
+          <div className="text-sm text-receipt-text">
+            <div className="font-medium mb-1">אשראי</div>
+            <div className="text-receipt-gray">תשלומים: 1 ****1234 ₪00.00</div>
+          </div>
         </div>
+        <div className="border-b border-receipt-divider pb-4"></div>
       </div>
 
       {/* Summary */}
@@ -196,4 +197,3 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
     </div>
   );
 }
-
