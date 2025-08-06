@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { User } from "lucide-react";
 import InvoiceReceipt from "./InvoiceReceipt";
@@ -72,21 +73,21 @@ export default function InvoiceInterface() {
       {/* Header Bar */}
       <header className="bg-receipt-green h-20 flex items-center justify-between px-6 text-white">
         <div className="flex items-center gap-3">
+          <User className="w-6 h-6" />
+          <span className="font-medium">שם משתמש</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-medium">שם חברה</span>
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
             <span className="text-receipt-green font-bold text-sm">ח</span>
           </div>
-          <span className="font-medium">שם חברה</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="font-medium">שם משתמש</span>
-          <User className="w-6 h-6" />
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-row-reverse"> {/* Reversed for RTL */}
-        {/* Editing Sidebar - Right Side in RTL */}
-        <div className="w-[630px] border-l border-receipt-border bg-white">
+      <div className="flex"> 
+        {/* Editing Sidebar - Left Side */}
+        <div className="w-[630px] border-r border-receipt-border bg-white">
           <EditingSidebar
             settings={settings}
             onSettingsChange={handleSettingsChange}
@@ -97,8 +98,8 @@ export default function InvoiceInterface() {
           />
         </div>
 
-        {/* Invoice Receipt - Left Side in RTL */}
-        <div className="flex-1 p-8 flex justify-center">
+        {/* Invoice Receipt - Right Side */}
+        <div className="flex-1 p-8 flex justify-center bg-gray-50">
           <InvoiceReceipt settings={settings} />
         </div>
       </div>

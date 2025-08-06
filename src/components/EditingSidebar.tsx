@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,11 +52,11 @@ export default function EditingSidebar({
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6">
-      <div className="space-y-8">
+    <div className="h-full overflow-y-auto">
+      <div className="p-6 space-y-8">
         {/* Template Selection */}
         <div>
-          <Label className="text-base font-medium mb-3 block">טמפלט</Label>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים</Label>
           <Select value={settings.template} onValueChange={(value) => onSettingsChange({ template: value })}>
             <SelectTrigger className="w-full">
               <SelectValue />
@@ -70,7 +71,7 @@ export default function EditingSidebar({
 
         {/* Logo & Banners */}
         <div>
-          <Label className="text-base font-medium mb-3 block">לוגו ובאנרים</Label>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">לוגו ובאנרים</Label>
           <p className="text-sm text-receipt-gray mb-4">
             באמצעות עריכת התמונות יהיה ניתן להכניס טקסט הבנקת שדות התוצרת
           </p>
@@ -78,7 +79,7 @@ export default function EditingSidebar({
           <div className="space-y-4">
             {/* Top Banner */}
             <div>
-              <Label className="text-sm font-medium mb-2 block">באנר עליון</Label>
+              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר עליון</Label>
               <div 
                 onClick={() => handleFileUpload('topBanner')}
                 className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
@@ -96,7 +97,7 @@ export default function EditingSidebar({
 
             {/* Logo */}
             <div>
-              <Label className="text-sm font-medium mb-2 block">לוגו</Label>
+              <Label className="text-sm font-medium mb-2 block text-receipt-text">לוגו</Label>
               <div 
                 onClick={() => handleFileUpload('logo')}
                 className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
@@ -114,10 +115,10 @@ export default function EditingSidebar({
 
             {/* Bottom Banner */}
             <div>
-              <Label className="text-sm font-medium mb-2 block">באנר תחתון</Label>
+              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר תחתון</Label>
               <div 
                 onClick={() => handleFileUpload('bottomBanner')}
-                className="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
+                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
               >
                 <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
                 <p className="text-sm text-receipt-gray">
@@ -134,7 +135,7 @@ export default function EditingSidebar({
 
         {/* Font Selection */}
         <div>
-          <Label className="text-base font-medium mb-3 block">גופן</Label>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">גופן</Label>
           <Select value={settings.font} onValueChange={(value) => onSettingsChange({ font: value })}>
             <SelectTrigger className="w-full">
               <SelectValue />
@@ -149,10 +150,10 @@ export default function EditingSidebar({
 
         {/* Colors */}
         <div>
-          <Label className="text-base font-medium mb-3 block">צבעים</Label>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">צבעים</Label>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-sm">רקע</Label>
+              <Label className="text-sm text-receipt-text">רקע</Label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -165,7 +166,7 @@ export default function EditingSidebar({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label className="text-sm">טקסט</Label>
+              <Label className="text-sm text-receipt-text">טקסט</Label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -178,7 +179,7 @@ export default function EditingSidebar({
             </div>
             
             <div className="flex items-center justify-between">
-              <Label className="text-sm">טקסט מבצע</Label>
+              <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
@@ -194,7 +195,7 @@ export default function EditingSidebar({
 
         {/* Social Media Links */}
         <div>
-          <Label className="text-base font-medium mb-3 block">קישור לרשתות החברתיות</Label>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <Facebook className="w-5 h-5 text-blue-600" />
@@ -230,31 +231,31 @@ export default function EditingSidebar({
       </div>
 
       {/* Bottom Action Bar */}
-      <div className="sticky bottom-0 bg-white border-t border-receipt-border mt-8 pt-6 space-y-3">
+      <div className="sticky bottom-0 bg-white border-t border-receipt-border p-6 space-y-3">
         <Button 
           onClick={handleSaveClick}
           disabled={isSaving}
           className="w-full bg-receipt-green hover:bg-receipt-green/90 text-white"
         >
+          <Save className="w-4 h-4 ml-2" />
           {isSaving ? "שומר..." : "שמור שינויים"}
-          <Save className="w-4 h-4 mr-2" />
         </Button>
         
         <Button 
           onClick={onCreateTemplate}
           variant="outline" 
-          className="w-full"
+          className="w-full border-receipt-border text-receipt-text hover:bg-receipt-lightgray"
         >
+          <Plus className="w-4 h-4 ml-2" />
           צור טמפלט
-          <Plus className="w-4 h-4 mr-2" />
         </Button>
         
         <button 
           onClick={onReset}
           className="w-full text-sm text-receipt-gray hover:text-receipt-text flex items-center justify-center gap-2 py-2"
         >
-          אפס הכל
           <RotateCcw className="w-4 h-4" />
+          אפס הכל
         </button>
       </div>
     </div>
