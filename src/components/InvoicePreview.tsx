@@ -1,336 +1,272 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram, MessageSquare, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Facebook, Instagram, MessageSquare, Barcode } from "lucide-react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
-  onSettingsChange?: (settings: Partial<InvoiceSettings>) => void;
 }
 
-export default function InvoicePreview({ settings, onSettingsChange }: InvoicePreviewProps) {
-  const [dragStates, setDragStates] = useState({
-    bannerImage: false,
-    secondaryBannerImage: false,
-    logo: false
-  });
-
+export default function InvoicePreview({ settings }: InvoicePreviewProps) {
   const { 
     bannerImage, 
     secondaryBannerImage,
     logo, 
     backgroundColor,
-    textColor,
-    discountColor,
+    innerFrameColor,
+    outerFrameColor,
     font,
     socialMedia
   } = settings;
   
-  const fontClass = font === 'Noto Sans Hebrew' ? 'font-hebrew' : `font-${font.toLowerCase()}`;
+  const fontClass = `font-${font.toLowerCase()}`;
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
-  const handleFileUpload = (file: File, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
-    if (!file || !onSettingsChange) return;
-    const imageUrl = URL.createObjectURL(file);
-    onSettingsChange({ [field]: imageUrl });
-  };
-
-  const handleDragOver = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
-    e.preventDefault();
-    if (!onSettingsChange) return;
-    setDragStates(prev => ({ ...prev, [field]: true }));
-  };
-
-  const handleDragLeave = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
-    e.preventDefault();
-    setDragStates(prev => ({ ...prev, [field]: false }));
-  };
-
-  const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
-    e.preventDefault();
-    setDragStates(prev => ({ ...prev, [field]: false }));
-    
-    if (!onSettingsChange) return;
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type.startsWith('image/')) {
-        handleFileUpload(file, field);
-      }
-    }
-  };
-
   return (
-    <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden max-w-md mx-auto">
+    <div 
+      className="w-full overflow-hidden p-6"
+      style={{ backgroundColor: outerFrameColor }}
+    >
       <div 
-        className={`w-full ${fontClass} rtl`}
-        style={{ backgroundColor, color: textColor }}
+        className="w-full overflow-hidden p-4"
+        style={{ backgroundColor: innerFrameColor }}
       >
-        {/* Banner Image */}
         <div 
-          className={`w-full bg-gray-100 h-32 flex items-center justify-center overflow-hidden cursor-pointer transition-colors ${
-            dragStates.bannerImage ? 'bg-green-100 border-2 border-green-500 border-dashed' : ''
-          }`}
-          onDragOver={(e) => handleDragOver(e, 'bannerImage')}
-          onDragLeave={(e) => handleDragLeave(e, 'bannerImage')}
-          onDrop={(e) => handleDrop(e, 'bannerImage')}
+          className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
+          style={{ backgroundColor }}
         >
-          {bannerImage ? (
-            <img 
-              src={bannerImage} 
-              alt="Invoice Banner" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="text-center flex items-center justify-center w-full h-full">
+          {/* Banner Image */}
+          <div className="w-full bg-gray-300 h-32 flex items-center justify-center overflow-hidden">
+            {bannerImage ? (
               <img 
-                src="/lovable-uploads/881255c3-91d5-4cce-b605-bd175f066a45.png" 
-                alt="Banner Placeholder"
-                className="w-16 h-16 opacity-60"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Company Logo and Header */}
-        <div className="p-4 text-center" style={{ color: textColor }}>
-          <div 
-            className={`w-20 h-20 bg-gray-100 mx-auto mb-4 rounded flex items-center justify-center cursor-pointer transition-colors ${
-              dragStates.logo ? 'bg-green-100 border-2 border-green-500 border-dashed' : ''
-            }`}
-            onDragOver={(e) => handleDragOver(e, 'logo')}
-            onDragLeave={(e) => handleDragLeave(e, 'logo')}
-            onDrop={(e) => handleDrop(e, 'logo')}
-          >
-            {logo ? (
-              <img 
-                src={logo} 
-                alt="Company Logo" 
-                className="w-full h-full object-cover rounded"
-              />
-            ) : (
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gray-300 rounded mx-auto flex items-center justify-center">
-                  <span className="text-xs text-gray-500">לוגו</span>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          <h2 className="text-xl font-bold mb-1">שם החברה</h2>
-          <h3 className="text-md">שם הסניף</h3>
-        </div>
-
-        {/* Main Content */}
-        <div className="px-6">
-          {/* Total Sum */}
-          <div className="text-center py-4">
-            <span className="text-2xl font-bold">
-              {currencySymbol}00.00
-            </span>
-          </div>
-
-          {/* Invoice Items Header */}
-          <div className="py-2">
-            <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-1">
-              <div>סכום</div>
-              <div className="text-center">כמות</div>
-              <div className="text-right font-bold">פריט</div>
-            </div>
-            
-            <Separator className="my-2" />
-            
-            {/* Invoice Items List */}
-            <div className="py-2 space-y-2">
-              <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                <div>{currencySymbol}00.00</div>
-                <div className="text-center">1</div>
-                <div className="text-right">
-                  <div className="font-bold">פריט</div>
-                  <div className="text-xs text-gray-500">ברקוד</div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                <div>{currencySymbol}00.00</div>
-                <div className="text-center">1</div>
-                <div className="text-right">
-                  <div className="font-bold">פריט</div>
-                  <div className="text-xs text-gray-500">ברקוד</div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 py-1 text-sm">
-                <div>{currencySymbol}00.00</div>
-                <div className="text-center">1</div>
-                <div className="text-right">
-                  <div className="font-bold">פריט</div>
-                  <div className="text-xs text-gray-500">ברקוד</div>
-                </div>
-              </div>
-              
-              {/* Discount */}
-              <div className="grid grid-cols-3 gap-4 py-2 text-sm" style={{ color: discountColor }}>
-                <div>-{currencySymbol}00.00</div>
-                <div className="text-center"></div>
-                <div className="text-right">הנחת מבצע</div>
-              </div>
-            </div>
-          </div>
-
-          <Separator className="my-2" />
-
-          {/* Payment Method */}
-          <div className="text-right py-2">
-            <div className="py-2">
-              <div className="font-bold">אשראי</div>
-              <div className="text-sm">{currencySymbol}00.00 ****1234 1 תשלומים:</div>
-            </div>
-            <Separator className="my-2" />
-          </div>
-
-          {/* Payment Information */}
-          <div className="py-4 space-y-1 text-right text-sm">
-            <div className="grid grid-cols-2">
-              <div className="text-left">{currencySymbol}00.00</div>
-              <div>סכום ללא מע"מ</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">{currencySymbol}00.00</div>
-              <div>מע"מ</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">{currencySymbol}00.00</div>
-              <div>סכום לתשלום</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">1005041234</div>
-              <div>מספר חשבונית</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">2024-11-23 20:03</div>
-              <div>תאריך ושעה</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">8</div>
-              <div>מספר קופה</div>
-            </div>
-            <div className="grid grid-cols-2">
-              <div className="text-left">ישראל לוי</div>
-              <div>קופאי/ת</div>
-            </div>
-          </div>
-
-          <Separator className="my-4" />
-
-          {/* Download Button */}
-          <div className="text-center py-2">
-            <Button className="w-full bg-primary hover:bg-primary/90 text-white font-hebrew">
-              <Download className="h-4 w-4 ml-2" />
-              הורדת מסמך מקור
-            </Button>
-          </div>
-
-          {/* Footer Text */}
-          <div className="text-center py-4">
-            <p className="text-sm">
-              לורם איפסום דולור סיט אמט, קונסקטטור אדיפיסיסינג אליט, סד דו 
-              איוסמוד טמפור אינסידידונט אוט לברה את דולורה מגנה
-            </p>
-          </div>
-
-          <Separator className="my-2" />
-
-          {/* Barcode */}
-          <div className="flex justify-center my-4">
-            <div className="bg-black h-16 w-48 flex items-center justify-center">
-              <div className="text-white text-xs">20240101005041234</div>
-            </div>
-          </div>
-
-          <Separator className="my-4" />
-
-          {/* Social Media Icons */}
-          {hasSocialMedia && (
-            <div className="flex justify-center gap-4 py-4">
-              {socialMedia.facebook && (
-                <a 
-                  href={socialMedia.facebook} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80"
-                >
-                  <img 
-                    src="/lovable-uploads/bfbb1a98-4c4a-4d73-9ae0-9424333155ab.png" 
-                    alt="Facebook"
-                    className="w-8 h-8"
-                  />
-                </a>
-              )}
-              {socialMedia.instagram && (
-                <a 
-                  href={socialMedia.instagram} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80"
-                >
-                  <img 
-                    src="/lovable-uploads/7964a1b1-6eea-43f5-a03f-ba8cb2672fd3.png" 
-                    alt="Instagram"
-                    className="w-8 h-8"
-                  />
-                </a>
-              )}
-              {socialMedia.tiktok && (
-                <a 
-                  href={socialMedia.tiktok} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80"
-                >
-                  <img 
-                    src="/lovable-uploads/90e62324-d9b5-4e8f-b3df-c1423b87ed43.png" 
-                    alt="TikTok"
-                    className="w-8 h-8"
-                  />
-                </a>
-              )}
-            </div>
-          )}
-
-          {/* Secondary Banner */}
-          <div 
-            className={`w-full bg-gray-100 h-24 flex items-center justify-center overflow-hidden mt-4 cursor-pointer transition-colors ${
-              dragStates.secondaryBannerImage ? 'bg-green-100 border-2 border-green-500 border-dashed' : ''
-            }`}
-            onDragOver={(e) => handleDragOver(e, 'secondaryBannerImage')}
-            onDragLeave={(e) => handleDragLeave(e, 'secondaryBannerImage')}
-            onDrop={(e) => handleDrop(e, 'secondaryBannerImage')}
-          >
-            {secondaryBannerImage ? (
-              <img 
-                src={secondaryBannerImage} 
-                alt="Secondary Banner" 
+                src={bannerImage} 
+                alt="Invoice Banner" 
                 className="w-full h-full object-cover"
               />
             ) : (
-            <div className="text-center flex items-center justify-center w-full h-full">
-              <img 
-                src="/lovable-uploads/881255c3-91d5-4cce-b605-bd175f066a45.png" 
-                alt="Banner Placeholder"
-                className="w-16 h-16 opacity-60"
-              />
-            </div>
+              <span className="text-4xl font-bold text-gray-700">באנר</span>
             )}
           </div>
-          
-          {/* Powered By Footer */}
-          <div className="flex justify-between items-center text-sm py-4">
-            <div>
-              Powered By <span className="text-green-500 font-bold">COMAX</span>
+
+          {/* Company & Branch Information */}
+          <div className="p-4 text-center">
+            {/* Company Logo - Now positioned above company name */}
+            {logo ? (
+              <div className="mb-3 flex justify-center">
+                <img 
+                  src={logo} 
+                  alt="Company Logo" 
+                  className="h-[300px] w-[300px] object-contain" 
+                />
+              </div>
+            ) : (
+              <div className="mb-3 h-[300px] w-[300px] bg-gray-200 mx-auto flex items-center justify-center">
+                <span className="text-lg text-gray-500">לוגו</span>
+              </div>
+            )}
+            
+            <h2 className="text-xl font-bold mb-1">שם החברה</h2>
+            <h3 className="text-md">שם הסניף</h3>
+          </div>
+
+          {/* Main Content */}
+          <div className="px-8">
+            {/* Total Sum Frame at top with HRs */}
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-2" />
+              <div className="text-center py-2">
+                <span className="text-2xl font-bold">
+                  {currencySymbol} 00.0
+                </span>
+              </div>
+              <Separator className="my-2" />
+            </div>
+
+            {/* Invoice Items Header */}
+            <div className="py-2">
+              <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-1">
+                <div>סכום</div>
+                <div className="text-center">כמות</div>
+                <div className="text-right font-bold">פריט</div>
+              </div>
+              
+              {/* HR below the title */}
+              <Separator className="my-2" />
+              
+              {/* Invoice Items List */}
+              <div className="py-2 space-y-2">
+                <div className="grid grid-cols-3 gap-4 py-1 text-sm">
+                  <div>{currencySymbol} 00.00</div>
+                  <div className="text-center">1</div>
+                  <div className="text-right">
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4 py-1 text-sm">
+                  <div>{currencySymbol} 00.00</div>
+                  <div className="text-center">1</div>
+                  <div className="text-right">
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4 py-1 text-sm">
+                  <div>{currencySymbol} 00.00</div>
+                  <div className="text-center">1</div>
+                  <div className="text-right">
+                    <div className="font-bold">פריט</div>
+                    <div className="text-xs text-gray-500">ברקוד</div>
+                  </div>
+                </div>
+                
+                {/* Discount */}
+                <div className="grid grid-cols-3 gap-4 py-2 text-sm text-amber-500">
+                  <div>{currencySymbol} -00.00</div>
+                  <div className="text-center"></div>
+                  <div className="text-right">הנחת מבצע</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-2" />
+            </div>
+
+            {/* Payment Method with HR framing - aligned right, removed top HR */}
+            <div className="text-right py-2">
+              <div className="py-2">
+                <div className="font-bold">אשראי</div>
+                <div className="text-sm">{currencySymbol}785.8 1 תשלומים: ****5644</div>
+              </div>
+              <Separator className="my-2" />
+            </div>
+
+            {/* Payment Information */}
+            <div className="py-4 space-y-1 text-right text-sm">
+              <div className="grid grid-cols-2">
+                <div className="text-left">{currencySymbol}652.21</div>
+                <div>סכום ללא מע"מ</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">{currencySymbol}133.58</div>
+                <div>מע"מ</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">{currencySymbol}785.8</div>
+                <div>סכום לתשלום</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">1005046383</div>
+                <div>מספר חשבונית</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">2024-11-23 20:03</div>
+                <div>תאריך</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">8</div>
+                <div>מספר קופה</div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="text-left">חנה</div>
+                <div>קופאי/ת</div>
+              </div>
+            </div>
+
+            <div className="max-w-[400px] mx-auto">
+              <Separator className="my-4" />
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 text-center">
+              {/* Footer Text with lorem ipsum, removed top HR */}
+              <p className="text-sm py-2 text-center">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              <Separator className="my-2" />
+              
+              <p className="text-lg font-bold my-4">DOC 652</p>
+              
+              {/* Barcode */}
+              <div className="flex justify-center my-4">
+                <img 
+                  src="/lovable-uploads/8494e468-2f1b-47b8-8486-821a6b9ff1f7.png"
+                  alt="Barcode"
+                  className="h-16 object-contain"
+                />
+              </div>
+
+              <div className="max-w-[400px] mx-auto">
+                <Separator className="my-4" />
+              </div>
+
+              {/* Social Media Icons */}
+              {hasSocialMedia && (
+                <>
+                  <div className="flex justify-center space-x-4 my-4">
+                    {socialMedia.facebook && (
+                      <a 
+                        href={socialMedia.facebook} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Facebook size={24} />
+                      </a>
+                    )}
+                    {socialMedia.instagram && (
+                      <a 
+                        href={socialMedia.instagram} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-pink-600 hover:text-pink-800"
+                      >
+                        <Instagram size={24} />
+                      </a>
+                    )}
+                    {socialMedia.tiktok && (
+                      <a 
+                        href={socialMedia.tiktok} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-black hover:text-gray-800"
+                      >
+                        <MessageSquare size={24} />
+                      </a>
+                    )}
+                  </div>
+                  <div className="max-w-[400px] mx-auto">
+                    <Separator className="my-4" />
+                  </div>
+                </>
+              )}
+
+              {/* Secondary Banner */}
+              <div className="w-full bg-gray-300 h-24 flex items-center justify-center overflow-hidden mt-4">
+                {secondaryBannerImage ? (
+                  <img 
+                    src={secondaryBannerImage} 
+                    alt="Secondary Banner" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-2xl font-bold text-gray-700">באנר</span>
+                )}
+              </div>
+              
+              {/* Powered By Footer */}
+              <div className="flex justify-between items-center text-sm mt-6">
+                <div>
+                  Powered By <span className="text-green-500 font-bold">COMAX</span>
+                </div>
+                <div className="text-blue-500">
+                  הורד מסמך מקור
+                </div>
+              </div>
             </div>
           </div>
         </div>
