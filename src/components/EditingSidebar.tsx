@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -123,7 +122,7 @@ export default function EditingSidebar({
                 <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
                 <p className="text-sm text-receipt-gray">
                   גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאน</span>
+                  <span className="text-blue-500 underline">לחץ כאן</span>
                 </p>
                 <p className="text-xs text-receipt-gray mt-1">
                   PNG, JPG עד 1MB מומלץ 200x200px
@@ -161,7 +160,6 @@ export default function EditingSidebar({
                   onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
                   className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
                 />
-                <div className="w-6 h-6 bg-white border border-receipt-border rounded"></div>
               </div>
             </div>
             
