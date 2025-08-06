@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceInterface";
 
 interface InvoiceReceiptProps {
@@ -158,6 +159,11 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
         לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קונדימנטום קורטיס 
         ניבה, מאסה כתם לבין לקולבהר. סמ טטי פר רועי. גן זמנים עליי פאן עשק 
         טבולה לבקריה, יצי נמס לעמק הקואץ. איטא קונהק
+      </div>
+
+      {/* HR below footer text */}
+      <div className="px-6">
+        <div className="border-b border-receipt-divider"></div>
       </div>
 
       {/* Barcode */}
