@@ -1,3 +1,4 @@
+
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Upload } from "lucide-react";
@@ -33,8 +34,12 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   // Prevent default drag behavior on the entire document
   useEffect(() => {
     const preventDefaults = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+      // Only prevent defaults if we're not within our drop zones
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-drop-zone]')) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     };
 
     document.addEventListener('dragenter', preventDefaults, false);
@@ -105,6 +110,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     className?: string; 
   }) => (
     <div
+      data-drop-zone="true"
       className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200`}
       onDragOver={handleDragOver}
       onDragEnter={(e) => handleDragEnter(e, field)}

@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
+import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,11 @@ export default function EditingSidebar({
   onReset,
 }: EditingSidebarProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [dragStates, setDragStates] = useState({
+    topBanner: false,
+    logo: false,
+    bottomBanner: false
+  });
 
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
@@ -34,9 +40,59 @@ export default function EditingSidebar({
       if (file) {
         const url = URL.createObjectURL(file);
         onSettingsChange({ [field]: url });
+        console.log(`Image uploaded for ${field}:`, url);
       }
     };
     input.click();
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
+  const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragStates(prev => ({ ...prev, [field]: true }));
+  };
+
+  const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDragStates(prev => ({ ...prev, [field]: false }));
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setDragStates(prev => ({ ...prev, [field]: false }));
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      
+      if (file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        onSettingsChange({ [field]: url });
+        console.log(`Image uploaded for ${field}:`, url);
+      } else {
+        console.error("File is not an image");
+      }
+    }
+  };
+
+  const handleRemoveImage = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
+    onSettingsChange({ [field]: null });
   };
 
   const handleColorChange = (field: string, value: string) => {
@@ -49,6 +105,62 @@ export default function EditingSidebar({
     onSave();
     setIsSaving(false);
   };
+
+  const renderUploadArea = (
+    field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>,
+    label: string,
+    currentImage: string | null
+  ) => (
+    <div>
+      <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
+      {currentImage ? (
+        <div className="relative border-2 border-receipt-border rounded-lg p-4">
+          <img 
+            src={currentImage} 
+            alt={`Uploaded ${label}`}
+            className="w-full h-24 object-cover rounded"
+          />
+          <div className="absolute top-2 right-2 flex gap-2">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => handleRemoveImage(field)}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+          <div className="mt-2 text-xs text-receipt-gray text-center">
+            {label} uploaded successfully
+          </div>
+        </div>
+      ) : (
+        <div 
+          onClick={() => handleFileUpload(field)}
+          onDragOver={handleDragOver}
+          onDragEnter={(e) => handleDragEnter(e, field)}
+          onDragLeave={(e) => handleDragLeave(e, field)}
+          onDrop={(e) => handleDrop(e, field)}
+          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200 ${
+            dragStates[field] 
+              ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
+              : 'border-receipt-border hover:border-receipt-gray'
+          }`}
+        >
+          <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
+          <p className="text-sm text-receipt-gray">
+            {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
+            {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
+          </p>
+          {!dragStates[field] && (
+            <p className="text-xs text-receipt-gray mt-1">
+              PNG, JPG עד 1MB מומלץ 200x200px
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="h-full overflow-y-auto">
@@ -76,59 +188,9 @@ export default function EditingSidebar({
           </p>
           
           <div className="space-y-4">
-            {/* Top Banner */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר עליון</Label>
-              <div 
-                onClick={() => handleFileUpload('topBanner')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
-
-            {/* Logo */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">לוגו</Label>
-              <div 
-                onClick={() => handleFileUpload('logo')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Banner */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר תחתון</Label>
-              <div 
-                onClick={() => handleFileUpload('bottomBanner')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
+            {renderUploadArea('topBanner', 'באנר עליון', settings.topBanner)}
+            {renderUploadArea('logo', 'לוגו', settings.logo)}
+            {renderUploadArea('bottomBanner', 'באנר תחתון', settings.bottomBanner)}
           </div>
         </div>
 

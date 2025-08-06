@@ -8,14 +8,20 @@ export interface InvoiceSettings {
   bannerImage: string | null;
   secondaryBannerImage: string | null;
   logo: string | null;
+  topBanner: string | null;
+  bottomBanner: string | null;
   backgroundColor: string;
   innerFrameColor: string;
   outerFrameColor: string;
   font: string;
+  template: string;
+  textColor: string;
+  promotionTextColor: string;
   socialMedia: {
     facebook: string;
     instagram: string;
     tiktok: string;
+    other: string;
   };
 }
 
@@ -23,14 +29,20 @@ const defaultSettings: InvoiceSettings = {
   bannerImage: null,
   secondaryBannerImage: null,
   logo: null,
+  topBanner: null,
+  bottomBanner: null,
   backgroundColor: "#ffffff",
   innerFrameColor: "#f3f3f3",
   outerFrameColor: "#f8f8f8",
   font: "Arial",
+  template: "לבן נקי",
+  textColor: "#000000",
+  promotionTextColor: "#f59e0b",
   socialMedia: {
     facebook: "",
     instagram: "",
     tiktok: "",
+    other: "",
   },
 };
 
@@ -39,7 +51,25 @@ export default function InvoiceCustomizer() {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSettingsChange = (newSettings: Partial<InvoiceSettings>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      
+      // Sync topBanner with bannerImage and bottomBanner with secondaryBannerImage
+      if ('topBanner' in newSettings) {
+        updated.bannerImage = newSettings.topBanner;
+      }
+      if ('bottomBanner' in newSettings) {
+        updated.secondaryBannerImage = newSettings.bottomBanner;
+      }
+      if ('bannerImage' in newSettings) {
+        updated.topBanner = newSettings.bannerImage;
+      }
+      if ('secondaryBannerImage' in newSettings) {
+        updated.bottomBanner = newSettings.secondaryBannerImage;
+      }
+      
+      return updated;
+    });
   };
 
   const handleSocialMediaChange = (
@@ -67,6 +97,14 @@ export default function InvoiceCustomizer() {
     setTimeout(() => {
       setIsSaving(false);
     }, 1000);
+  };
+
+  const handleCreateTemplate = () => {
+    console.log("Create template clicked");
+  };
+
+  const handleReset = () => {
+    setSettings(defaultSettings);
   };
 
   return (
