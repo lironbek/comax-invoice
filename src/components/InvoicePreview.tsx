@@ -2,7 +2,7 @@
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Upload } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface InvoicePreviewProps {
   settings: InvoiceSettings;
@@ -31,9 +31,33 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
+  // Prevent default drag behavior on the entire document
+  useEffect(() => {
+    const preventDefaults = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    document.addEventListener('dragenter', preventDefaults, false);
+    document.addEventListener('dragover', preventDefaults, false);
+    document.addEventListener('drop', handleDrop, false);
+
+    return () => {
+      document.removeEventListener('dragenter', preventDefaults);
+      document.removeEventListener('dragover', preventDefaults);
+      document.removeEventListener('drop', handleDrop);
+    };
+  }, []);
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
     console.log("Drag over event triggered");
   };
 
