@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import InvoicePreview from "@/components/InvoicePreview";
 import CustomizationPanel from "@/components/CustomizationPanel";
+import AppHeader from "@/components/AppHeader";
 
 export interface InvoiceSettings {
   bannerImage: string | null;
@@ -11,6 +12,8 @@ export interface InvoiceSettings {
   backgroundColor: string;
   innerFrameColor: string;
   outerFrameColor: string;
+  textColor: string;
+  discountColor: string;
   font: string;
   socialMedia: {
     facebook: string;
@@ -26,7 +29,9 @@ const defaultSettings: InvoiceSettings = {
   backgroundColor: "#ffffff",
   innerFrameColor: "#f3f3f3",
   outerFrameColor: "#f8f8f8",
-  font: "Arial",
+  textColor: "#000000",
+  discountColor: "#ff6b35",
+  font: "Noto Sans Hebrew",
   socialMedia: {
     facebook: "",
     instagram: "",
@@ -69,36 +74,34 @@ export default function InvoiceCustomizer() {
     }, 1000);
   };
 
+  const handleReset = () => {
+    setSettings(defaultSettings);
+  };
+
   return (
-    <div className="container mx-auto p-4 max-w-7xl">
-      <h1 className="text-3xl font-bold mb-6 text-center">Invoice Customization</h1>
+    <div className="min-h-screen bg-gray-50">
+      <AppHeader onReset={handleReset} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="order-2 lg:order-1">
-          <Card className="overflow-hidden shadow-md">
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Invoice Preview</h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                Preview how your invoice will look to customers
-              </p>
-            </div>
+      <div className="flex h-[calc(100vh-80px)]">
+        {/* Invoice Preview - Left Side */}
+        <div className="flex-1 invoice-container p-6 overflow-y-auto">
+          <div className="max-w-2xl mx-auto">
             <InvoicePreview settings={settings} onSettingsChange={handleSettingsChange} />
-          </Card>
+          </div>
         </div>
         
-        <div className="order-1 lg:order-2">
-          <Card className="shadow-md p-6">
-            <div className="space-y-6">
-              <CustomizationPanel 
-                settings={settings} 
-                onSettingsChange={handleSettingsChange}
-                onSocialMediaChange={handleSocialMediaChange}
-                onFileRemove={handleFileRemove}
-                onSave={handleSaveChanges}
-                isSaving={isSaving}
-              />
-            </div>
-          </Card>
+        {/* Customization Panel - Right Side */}
+        <div className="w-96 customization-panel overflow-y-auto">
+          <div className="p-6">
+            <CustomizationPanel 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange}
+              onSocialMediaChange={handleSocialMediaChange}
+              onFileRemove={handleFileRemove}
+              onSave={handleSaveChanges}
+              isSaving={isSaving}
+            />
+          </div>
         </div>
       </div>
     </div>
