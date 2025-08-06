@@ -1,4 +1,3 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, MessageSquare, Upload } from "lucide-react";
@@ -38,19 +37,16 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
       e.stopPropagation();
     };
 
-    const handleDrop = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
     document.addEventListener('dragenter', preventDefaults, false);
     document.addEventListener('dragover', preventDefaults, false);
-    document.addEventListener('drop', handleDrop, false);
+    document.addEventListener('dragleave', preventDefaults, false);
+    document.addEventListener('drop', preventDefaults, false);
 
     return () => {
       document.removeEventListener('dragenter', preventDefaults);
       document.removeEventListener('dragover', preventDefaults);
-      document.removeEventListener('drop', handleDrop);
+      document.removeEventListener('dragleave', preventDefaults);
+      document.removeEventListener('drop', preventDefaults);
     };
   }, []);
 
@@ -58,22 +54,18 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'copy';
-    console.log("Drag over event triggered");
   };
 
   const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(`Drag enter for field: ${field}`);
     setDragStates(prev => ({ ...prev, [field]: true }));
   };
 
   const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(`Drag leave for field: ${field}`);
     
-    // Check if we're actually leaving the element
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
@@ -86,24 +78,20 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(`Drop event for field: ${field}`, e.dataTransfer.files);
     
     setDragStates(prev => ({ ...prev, [field]: false }));
     
     const files = e.dataTransfer.files;
     if (files.length > 0 && onSettingsChange) {
       const file = files[0];
-      console.log(`File type: ${file.type}, File name: ${file.name}`);
       
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
-        console.log(`Created URL: ${url}`);
         onSettingsChange({ [field]: url });
+        console.log(`Image uploaded for ${field}:`, url);
       } else {
-        console.log("File is not an image");
+        console.error("File is not an image");
       }
-    } else {
-      console.log("No files or onSettingsChange not available", { files: files.length, onSettingsChange: !!onSettingsChange });
     }
   };
 
@@ -117,12 +105,11 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     className?: string; 
   }) => (
     <div
-      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200 cursor-pointer`}
+      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200`}
       onDragOver={handleDragOver}
       onDragEnter={(e) => handleDragEnter(e, field)}
       onDragLeave={(e) => handleDragLeave(e, field)}
       onDrop={(e) => handleDrop(e, field)}
-      onClick={() => console.log(`Click on ${field} drop zone`)}
     >
       {children}
       {dragStates[field] && (
