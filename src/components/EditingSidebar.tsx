@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default function EditingSidebar({
   onReset,
 }: EditingSidebarProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [draggedField, setDraggedField] = useState<string | null>(null);
 
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
@@ -39,6 +41,31 @@ export default function EditingSidebar({
     input.click();
   };
 
+  const handleDrop = (e: React.DragEvent, field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
+    e.preventDefault();
+    setDraggedField(null);
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file);
+      onSettingsChange({ [field]: url });
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = (e: React.DragEvent, field: string) => {
+    e.preventDefault();
+    setDraggedField(field);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggedField(null);
+  };
+
   const handleColorChange = (field: string, value: string) => {
     onSettingsChange({ [field]: value });
   };
@@ -49,6 +76,54 @@ export default function EditingSidebar({
     onSave();
     setIsSaving(false);
   };
+
+  const ImageUploadArea = ({ 
+    field, 
+    label, 
+    currentImage 
+  }: { 
+    field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>; 
+    label: string;
+    currentImage: string | null;
+  }) => (
+    <div>
+      <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
+      <div 
+        onClick={() => handleFileUpload(field)}
+        onDrop={(e) => handleDrop(e, field)}
+        onDragOver={handleDragOver}
+        onDragEnter={(e) => handleDragEnter(e, field)}
+        onDragLeave={handleDragLeave}
+        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+          draggedField === field 
+            ? 'border-blue-500 bg-blue-50' 
+            : 'border-receipt-border hover:border-receipt-gray'
+        }`}
+      >
+        {currentImage ? (
+          <img 
+            src={currentImage} 
+            alt={label}
+            className="w-full h-20 object-contain mb-2"
+          />
+        ) : (
+          <img 
+            src="/lovable-uploads/3a789a5e-7185-419c-84e7-cd7f3bb91059.png" 
+            alt="Placeholder"
+            className="w-16 h-16 mx-auto mb-2 opacity-50"
+          />
+        )}
+        <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
+        <p className="text-sm text-receipt-gray">
+          גרור ושחרר קובץ או{" "}
+          <span className="text-blue-500 underline">לחץ כאן</span>
+        </p>
+        <p className="text-xs text-receipt-gray mt-1">
+          PNG, JPG עד 1MB מומלץ 200x200px
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="h-full overflow-y-auto">
@@ -76,59 +151,23 @@ export default function EditingSidebar({
           </p>
           
           <div className="space-y-4">
-            {/* Top Banner */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר עליון</Label>
-              <div 
-                onClick={() => handleFileUpload('topBanner')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
-
-            {/* Logo */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">לוגו</Label>
-              <div 
-                onClick={() => handleFileUpload('logo')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Banner */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר תחתון</Label>
-              <div 
-                onClick={() => handleFileUpload('bottomBanner')}
-                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
-              >
-                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-                <p className="text-sm text-receipt-gray">
-                  גרור ושחרר קובץ או{" "}
-                  <span className="text-blue-500 underline">לחץ כאן</span>
-                </p>
-                <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              </div>
-            </div>
+            <ImageUploadArea 
+              field="topBanner" 
+              label="באנר עליון" 
+              currentImage={settings.topBanner}
+            />
+            
+            <ImageUploadArea 
+              field="logo" 
+              label="לוגו" 
+              currentImage={settings.logo}
+            />
+            
+            <ImageUploadArea 
+              field="bottomBanner" 
+              label="באנר תחתון" 
+              currentImage={settings.bottomBanner}
+            />
           </div>
         </div>
 
@@ -246,7 +285,7 @@ export default function EditingSidebar({
         >
           <RotateCcw className="w-4 h-4" />
           אפס הכל
-        </button>
+        </Button>
       </div>
     </div>
   );
