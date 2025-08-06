@@ -1,9 +1,8 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Facebook, Instagram, MessageSquare, X } from "lucide-react";
+import { Facebook, Instagram, MessageSquare, X, ChevronDown } from "lucide-react";
 
 interface CustomizationPanelProps {
   settings: InvoiceSettings;
@@ -140,56 +139,44 @@ export default function CustomizationPanel({
         <div className="space-y-6">
           <Label className="font-medium block text-right">צבעים</Label>
           
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
-                  <input
-                    type="color"
-                    value={settings.backgroundColor}
-                    onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
-                    className="w-full h-full cursor-pointer border-none"
-                  />
-                </div>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-2 border rounded-md bg-white">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={settings.backgroundColor}
+                  onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
+                  className="w-6 h-6 rounded border-0 cursor-pointer"
+                />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
               <Label className="text-sm font-normal">רקע</Label>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
-                  <input
-                    type="color"
-                    value={settings.innerFrameColor}
-                    onChange={(e) => onSettingsChange({ innerFrameColor: e.target.value })}
-                    className="w-full h-full cursor-pointer border-none"
-                  />
-                </div>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+            <div className="flex items-center justify-between p-2 border rounded-md bg-white">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={settings.innerFrameColor}
+                  onChange={(e) => onSettingsChange({ innerFrameColor: e.target.value })}
+                  className="w-6 h-6 rounded border-0 cursor-pointer"
+                />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
-              <Label className="text-sm font-normal">מסגרת</Label>
+              <Label className="text-sm font-normal">טקסט</Label>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
-                  <input
-                    type="color"
-                    value={settings.outerFrameColor}
-                    onChange={(e) => onSettingsChange({ outerFrameColor: e.target.value })}
-                    className="w-full h-full cursor-pointer border-none"
-                  />
-                </div>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+            <div className="flex items-center justify-between p-2 border rounded-md bg-white">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={settings.outerFrameColor}
+                  onChange={(e) => onSettingsChange({ outerFrameColor: e.target.value })}
+                  className="w-6 h-6 rounded border-0 cursor-pointer"
+                />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
-              <Label className="text-sm font-normal">מסגרת חיצונית</Label>
+              <Label className="text-sm font-normal">טקסט מבטא</Label>
             </div>
           </div>
         </div>
