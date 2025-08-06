@@ -1,7 +1,6 @@
-
 import { InvoiceSettings } from "./InvoiceCustomizer";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram, MessageSquare, Barcode, Upload } from "lucide-react";
+import { Facebook, Instagram, MessageSquare, Upload } from "lucide-react";
 import { useState } from "react";
 
 interface InvoicePreviewProps {
@@ -31,18 +30,33 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
-  const handleDragOver = (e: React.DragEvent, field: keyof typeof dragStates) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    e.stopPropagation();
     setDragStates(prev => ({ ...prev, [field]: true }));
   };
 
   const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
-    setDragStates(prev => ({ ...prev, [field]: false }));
+    e.stopPropagation();
+    // Only set drag state to false if we're leaving the drop zone entirely
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDragStates(prev => ({ ...prev, [field]: false }));
+    }
   };
 
   const handleDrop = (e: React.DragEvent, field: 'bannerImage' | 'secondaryBannerImage' | 'logo') => {
     e.preventDefault();
+    e.stopPropagation();
     setDragStates(prev => ({ ...prev, [field]: false }));
     
     const files = e.dataTransfer.files;
@@ -65,17 +79,18 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     className?: string; 
   }) => (
     <div
-      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50' : ''}`}
-      onDragOver={(e) => handleDragOver(e, field)}
+      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200`}
+      onDragOver={handleDragOver}
+      onDragEnter={(e) => handleDragEnter(e, field)}
       onDragLeave={(e) => handleDragLeave(e, field)}
       onDrop={(e) => handleDrop(e, field)}
     >
       {children}
       {dragStates[field] && (
-        <div className="absolute inset-0 bg-blue-50 bg-opacity-90 flex items-center justify-center z-10 rounded">
+        <div className="absolute inset-0 bg-blue-100 bg-opacity-80 flex items-center justify-center z-10 rounded border-2 border-dashed border-blue-400">
           <div className="text-center">
-            <Upload className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-            <p className="text-sm text-blue-600 font-medium">Drop image here</p>
+            <Upload className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+            <p className="text-sm text-blue-700 font-medium">Drop image here</p>
           </div>
         </div>
       )}
