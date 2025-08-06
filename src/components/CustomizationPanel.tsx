@@ -30,7 +30,7 @@ export default function CustomizationPanel({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 rtl-container">
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="banner-upload" className="font-medium">
@@ -137,72 +137,59 @@ export default function CustomizationPanel({
           <p className="text-xs text-muted-foreground">Recommended size: 800x100px, max 1MB</p>
         </div>
 
-        <div className="space-y-4">
-          <Label className="font-medium">Colors</Label>
+        <div className="space-y-6">
+          <Label className="font-medium block text-right">צבעים</Label>
           
-          <div className="space-y-2">
-            <Label htmlFor="background-color" className="text-sm">
-              Background Color
-            </Label>
-            <div className="flex items-center space-x-4">
-              <Input
-                type="color"
-                id="background-color"
-                value={settings.backgroundColor}
-                onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
-                className="w-16 h-10 p-1 cursor-pointer"
-              />
-              <Input
-                type="text"
-                value={settings.backgroundColor}
-                onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
-                className="w-28"
-                maxLength={7}
-              />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
+                  <input
+                    type="color"
+                    value={settings.backgroundColor}
+                    onChange={(e) => onSettingsChange({ backgroundColor: e.target.value })}
+                    className="w-full h-full cursor-pointer border-none"
+                  />
+                </div>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <Label className="text-sm font-normal">רקע</Label>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="inner-frame-color" className="text-sm">
-              Inner Frame Color
-            </Label>
-            <div className="flex items-center space-x-4">
-              <Input
-                type="color"
-                id="inner-frame-color"
-                value={settings.innerFrameColor}
-                onChange={(e) => onSettingsChange({ innerFrameColor: e.target.value })}
-                className="w-16 h-10 p-1 cursor-pointer"
-              />
-              <Input
-                type="text"
-                value={settings.innerFrameColor}
-                onChange={(e) => onSettingsChange({ innerFrameColor: e.target.value })}
-                className="w-28"
-                maxLength={7}
-              />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
+                  <input
+                    type="color"
+                    value={settings.innerFrameColor}
+                    onChange={(e) => onSettingsChange({ innerFrameColor: e.target.value })}
+                    className="w-full h-full cursor-pointer border-none"
+                  />
+                </div>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <Label className="text-sm font-normal">מסגרת</Label>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="outer-frame-color" className="text-sm">
-              Outer Frame Color
-            </Label>
-            <div className="flex items-center space-x-4">
-              <Input
-                type="color"
-                id="outer-frame-color"
-                value={settings.outerFrameColor}
-                onChange={(e) => onSettingsChange({ outerFrameColor: e.target.value })}
-                className="w-16 h-10 p-1 cursor-pointer"
-              />
-              <Input
-                type="text"
-                value={settings.outerFrameColor}
-                onChange={(e) => onSettingsChange({ outerFrameColor: e.target.value })}
-                className="w-28"
-                maxLength={7}
-              />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 border border-gray-300 rounded cursor-pointer overflow-hidden">
+                  <input
+                    type="color"
+                    value={settings.outerFrameColor}
+                    onChange={(e) => onSettingsChange({ outerFrameColor: e.target.value })}
+                    className="w-full h-full cursor-pointer border-none"
+                  />
+                </div>
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <Label className="text-sm font-normal">מסגרת חיצונית</Label>
             </div>
           </div>
         </div>
