@@ -51,7 +51,7 @@ export default function EditingSidebar({
   };
 
   return (
-    <div className="w-80 h-full overflow-y-auto border-l border-border bg-background">
+    <div className="h-full overflow-y-auto">
       <div className="p-6 space-y-8">
         {/* Template Selection */}
         <div>
@@ -81,14 +81,14 @@ export default function EditingSidebar({
               <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר עליון</Label>
               <div 
                 onClick={() => handleFileUpload('topBanner')}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
               >
-                <div className="flex items-center justify-center gap-2 text-gray-500 mb-1">
-                  <Upload className="w-4 h-4" />
-                  <span className="text-sm">גרור ושחרר קובץ או</span>
-                  <span className="text-sm text-blue-500 underline">לחץ כאן</span>
-                </div>
-                <p className="text-xs text-gray-400">
+                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
+                <p className="text-sm text-receipt-gray">
+                  גרור ושחרר קובץ או{" "}
+                  <span className="text-blue-500 underline">לחץ כאן</span>
+                </p>
+                <p className="text-xs text-receipt-gray mt-1">
                   PNG, JPG עד 1MB מומלץ 200x200px
                 </p>
               </div>
@@ -99,14 +99,14 @@ export default function EditingSidebar({
               <Label className="text-sm font-medium mb-2 block text-receipt-text">לוגו</Label>
               <div 
                 onClick={() => handleFileUpload('logo')}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
               >
-                <div className="flex items-center justify-center gap-2 text-gray-500 mb-1">
-                  <Upload className="w-4 h-4" />
-                  <span className="text-sm">גרור ושחרר קובץ או</span>
-                  <span className="text-sm text-blue-500 underline">לחץ כאן</span>
-                </div>
-                <p className="text-xs text-gray-400">
+                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
+                <p className="text-sm text-receipt-gray">
+                  גרור ושחרר קובץ או{" "}
+                  <span className="text-blue-500 underline">לחץ כאן</span>
+                </p>
+                <p className="text-xs text-receipt-gray mt-1">
                   PNG, JPG עד 1MB מומלץ 200x200px
                 </p>
               </div>
@@ -117,14 +117,14 @@ export default function EditingSidebar({
               <Label className="text-sm font-medium mb-2 block text-receipt-text">באנר תחתון</Label>
               <div 
                 onClick={() => handleFileUpload('bottomBanner')}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+                className="border-2 border-dashed border-receipt-border rounded-lg p-6 text-center cursor-pointer hover:border-receipt-gray transition-colors"
               >
-                <div className="flex items-center justify-center gap-2 text-gray-500 mb-1">
-                  <Upload className="w-4 h-4" />
-                  <span className="text-sm">גרור ושחרר קובץ או</span>
-                  <span className="text-sm text-blue-500 underline">לחץ כאן</span>
-                </div>
-                <p className="text-xs text-gray-400">
+                <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
+                <p className="text-sm text-receipt-gray">
+                  גרור ושחרר קובץ או{" "}
+                  <span className="text-blue-500 underline">לחץ כאן</span>
+                </p>
+                <p className="text-xs text-receipt-gray mt-1">
                   PNG, JPG עד 1MB מומלץ 200x200px
                 </p>
               </div>
