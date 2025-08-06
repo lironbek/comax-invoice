@@ -1,4 +1,3 @@
-
 import { InvoiceSettings } from "./InvoiceInterface";
 
 interface InvoiceReceiptProps {
@@ -20,7 +19,7 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
           <div className="flex flex-col items-center text-receipt-gray">
             <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
               </svg>
             </div>
           </div>
@@ -188,11 +187,10 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
       </div>
 
       {/* Powered By */}
-      <div className="px-6 py-4 flex justify-between items-center text-xs border-t border-receipt-divider">
+      <div className="px-6 py-4 flex justify-center items-center text-xs border-t border-receipt-divider">
         <div className="text-receipt-gray">
           Powered By <span className="text-receipt-green font-bold">COMAX</span>
         </div>
-        <button className="text-blue-500">אפשר הכל</button>
       </div>
     </div>
   );
