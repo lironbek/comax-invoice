@@ -56,45 +56,45 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
       <div className="px-6 pb-4">
         {/* Headers */}
         <div className="grid grid-cols-3 gap-4 text-sm font-medium text-receipt-text border-b border-receipt-divider pb-2 mb-3">
-          <div className="text-left">סכום</div>
-          <div className="text-center">כמות</div>
           <div className="text-right">פריט</div>
+          <div className="text-center">כמות</div>
+          <div className="text-left">סכום</div>
         </div>
 
         {/* Items */}
         <div className="space-y-2 text-sm">
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-left text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-left text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-left text-receipt-text">₪00.00</div>
-            <div className="text-center text-receipt-text">1</div>
             <div className="text-right">
               <div className="text-receipt-text font-medium">פריט</div>
               <div className="text-xs text-receipt-gray">ברקוד</div>
             </div>
+            <div className="text-center text-receipt-text">1</div>
+            <div className="text-left text-receipt-text">₪00.00</div>
           </div>
 
           {/* Discount */}
           <div className="grid grid-cols-3 gap-4 py-1">
-            <div className="text-left" style={{ color: settings.promotionTextColor }}>₪00.00-</div>
-            <div className="text-center"></div>
             <div className="text-right" style={{ color: settings.promotionTextColor }}>הנחת מבצע</div>
+            <div className="text-center"></div>
+            <div className="text-left" style={{ color: settings.promotionTextColor }}>₪00.00-</div>
           </div>
         </div>
       </div>
@@ -116,31 +116,31 @@ export default function InvoiceReceipt({ settings }: InvoiceReceiptProps) {
       <div className="px-6 pb-4 space-y-1 text-sm">
         <div className="flex justify-between">
           <div className="text-receipt-text">₪00.00</div>
-          <div className="text-receipt-gray">סכום ללא מע"מ</div>
+          <div className="text-receipt-gray text-right">סכום ללא מע"מ</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">₪00.00</div>
-          <div className="text-receipt-gray">מע"מ</div>
+          <div className="text-receipt-gray text-right">מע"מ</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">₪00.00</div>
-          <div className="text-receipt-gray">סכום לתשלום</div>
+          <div className="text-receipt-gray text-right">סכום לתשלום</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">1005041234</div>
-          <div className="text-receipt-gray">מספר חשבונית</div>
+          <div className="text-receipt-gray text-right">מספר חשבונית</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">20:03 2024-11-23</div>
-          <div className="text-receipt-gray">תאריך ושעה</div>
+          <div className="text-receipt-gray text-right">תאריך ושעה</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">8</div>
-          <div className="text-receipt-gray">מספר קופה</div>
+          <div className="text-receipt-gray text-right">מספר קופה</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-text">ישראל לוי</div>
-          <div className="text-receipt-gray">קופאי/ת</div>
+          <div className="text-receipt-gray text-right">קופאי/ת</div>
         </div>
       </div>
 
