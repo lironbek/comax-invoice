@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -187,7 +186,6 @@ export default function EditingSidebar({
                   onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
                   className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
                 />
-                <div className="w-6 h-6 bg-orange-500 border border-receipt-border rounded"></div>
               </div>
             </div>
           </div>
