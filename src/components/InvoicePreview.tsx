@@ -31,29 +31,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
-  // Prevent default drag behavior on the entire document
-  useEffect(() => {
-    const preventDefaults = (e: DragEvent) => {
-      // Only prevent defaults if we're not within our drop zones
-      const target = e.target as HTMLElement;
-      if (!target.closest('[data-drop-zone]')) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-
-    document.addEventListener('dragenter', preventDefaults, false);
-    document.addEventListener('dragover', preventDefaults, false);
-    document.addEventListener('dragleave', preventDefaults, false);
-    document.addEventListener('drop', preventDefaults, false);
-
-    return () => {
-      document.removeEventListener('dragenter', preventDefaults);
-      document.removeEventListener('dragover', preventDefaults);
-      document.removeEventListener('dragleave', preventDefaults);
-      document.removeEventListener('drop', preventDefaults);
-    };
-  }, []);
+  // Simple drag and drop without document interference
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
