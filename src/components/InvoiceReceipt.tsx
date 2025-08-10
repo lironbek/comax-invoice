@@ -9,28 +9,28 @@ interface InvoiceReceiptProps {
 }
 
 export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceReceiptProps) {
+  console.log('InvoiceReceipt rendered with onSettingsChange:', !!onSettingsChange);
   const [dragStates, setDragStates] = useState({
     topBanner: false,
     bottomBanner: false,
     logo: false
   });
 
-  // Prevent default drag behavior on the entire document
+  // Prevent default drag behavior only for non-drop-zone areas
   useEffect(() => {
     const preventDefaults = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-drop-zone]')) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     };
 
-    document.addEventListener('dragenter', preventDefaults, false);
     document.addEventListener('dragover', preventDefaults, false);
-    document.addEventListener('dragleave', preventDefaults, false);
     document.addEventListener('drop', preventDefaults, false);
 
     return () => {
-      document.removeEventListener('dragenter', preventDefaults);
       document.removeEventListener('dragover', preventDefaults);
-      document.removeEventListener('dragleave', preventDefaults);
       document.removeEventListener('drop', preventDefaults);
     };
   }, []);
