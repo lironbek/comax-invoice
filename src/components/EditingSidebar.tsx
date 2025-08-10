@@ -203,7 +203,7 @@ export default function EditingSidebar({
               : 'border-receipt-border hover:border-receipt-gray'
           }`}
         >
-          <div className="flex-1 text-left">
+          <div className="text-left">
             <p className="text-sm text-receipt-gray">
               {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
               {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
