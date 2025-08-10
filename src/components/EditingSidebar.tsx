@@ -32,7 +32,12 @@ export default function EditingSidebar({
   const [isSaving, setIsSaving] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>([]);
-  
+  const [dragStates, setDragStates] = useState({
+    topBanner: false,
+    logo: false,
+    bottomBanner: false
+  });
+
   // Load custom templates from localStorage on mount
   useEffect(() => {
     const loadedTemplates: CustomTemplate[] = [];
@@ -54,12 +59,6 @@ export default function EditingSidebar({
     setCustomTemplates(loadedTemplates);
   }, []);
 
-  const systemTemplates = [
-    { value: "לבן נקי", label: "לבן נקי" },
-    { value: "צבעוני", label: "צבעוני" },
-    { value: "מינימליסטי", label: "מינימליסטי" }
-  ];
-
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -72,6 +71,50 @@ export default function EditingSidebar({
       }
     };
     input.click();
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
+  const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragStates(prev => ({ ...prev, [field]: true }));
+  };
+
+  const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDragStates(prev => ({ ...prev, [field]: false }));
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setDragStates(prev => ({ ...prev, [field]: false }));
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      
+      if (file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        onSettingsChange({ [field]: url });
+      } else {
+        console.error("File is not an image");
+      }
+    }
   };
 
   const handleRemoveImage = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
@@ -125,103 +168,99 @@ export default function EditingSidebar({
     label: string,
     currentImage: string | null
   ) => (
-    <div className="space-y-2">
-      <Label className="text-sm font-medium text-receipt-text">{label}</Label>
+    <div>
+      <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
       {currentImage ? (
-        <div className="border-2 border-green-200 rounded-lg p-4 bg-green-50">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700">קובץ עלה בהצלחה</span>
-            </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => handleRemoveImage(field)}
-              className="h-6 w-6 p-0 text-gray-500 hover:text-red-500"
-            >
-              <X className="h-3 w-3" />
-            </Button>
+        <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
+          <div className="flex items-center gap-2 mb-2">
+            <Check className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-green-700">קובץ עלה בהצלחה</span>
           </div>
           <img 
             src={currentImage} 
             alt={`Uploaded ${label}`}
-            className="w-full h-20 object-cover rounded border"
+            className="w-full h-16 object-cover rounded"
           />
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleRemoveImage(field)}
+            className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-500 hover:text-red-500"
+          >
+            <X className="h-3 w-3" />
+          </Button>
         </div>
       ) : (
         <div 
           onClick={() => handleFileUpload(field)}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+          onDragOver={handleDragOver}
+          onDragEnter={(e) => handleDragEnter(e, field)}
+          onDragLeave={(e) => handleDragLeave(e, field)}
+          onDrop={(e) => handleDrop(e, field)}
+          className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-all duration-200 ${
+            dragStates[field] 
+              ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
+              : 'border-receipt-border hover:border-receipt-gray'
+          }`}
         >
-          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-sm text-gray-600 mb-1">
-            גרור ושחרר קובץ או <span className="text-blue-500 underline">לחץ כאן</span>
+          <Upload className="w-6 h-6 mx-auto mb-2 text-receipt-gray" />
+          <p className="text-sm text-receipt-gray">
+            {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
+            {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
           </p>
-          <p className="text-xs text-gray-500">
-            גודל מומלץ 200x200px מקסימום 1MB
-          </p>
+          {!dragStates[field] && (
+            <p className="text-xs text-receipt-gray mt-1">
+              PNG, JPG עד 1MB מומלץ 200x200px
+            </p>
+          )}
         </div>
       )}
     </div>
   );
+
+  // Combine system and custom templates for dropdown
+  const allTemplates = [
+    { value: "לבן נקי", label: "לבן נקי", isSystem: true },
+    { value: "צבעוני", label: "צבעוני", isSystem: true },
+    { value: "מינימליסטי", label: "מינימליסטי", isSystem: true },
+    ...customTemplates.map(t => ({ value: t.name, label: t.name, isSystem: false }))
+  ];
 
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-6 space-y-8">
         {/* Template Selection */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים קיימים</Label>
-          
-          {/* System Templates */}
-          <div className="space-y-2 mb-4">
-            {systemTemplates.map((template) => (
-              <div
-                key={template.value}
-                className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
-                  settings.template === template.value 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleTemplateSelect(template.value)}
-              >
-                <span className="text-sm font-medium text-receipt-text">{template.label}</span>
-                <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                  {settings.template === template.value && (
-                    <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Custom Templates */}
-          {customTemplates.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-receipt-text mb-2">הטמפלטים שלי</h4>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים</Label>
+          <Select 
+            value={settings.template} 
+            onValueChange={handleTemplateSelect}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="לבן נקי">לבן נקי</SelectItem>
+              <SelectItem value="צבעוני">צבעוני</SelectItem>
+              <SelectItem value="מינימליסטי">מינימליסטי</SelectItem>
               {customTemplates.map((template) => (
-                <div
-                  key={template.name}
-                  className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
-                >
-                  <div 
-                    className="flex-1 cursor-pointer"
-                    onClick={() => handleTemplateSelect(template.name)}
-                  >
-                    <span className="text-sm font-medium text-receipt-text">{template.name}</span>
-                  </div>
+                <SelectItem key={template.name} value={template.name}>
+                  {template.name}
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => handleDeleteTemplate(template.name)}
-                    className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTemplate(template.name);
+                    }}
+                    className="ml-2 h-4 w-4 p-0 text-gray-400 hover:text-red-500"
                   >
                     <X className="h-3 w-3" />
                   </Button>
-                </div>
+                </SelectItem>
               ))}
-            </div>
-          )}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Logo & Banners */}

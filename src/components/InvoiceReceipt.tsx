@@ -91,7 +91,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       {/* Items Table */}
       <div className="px-6 pb-4">
         {/* Headers */}
-        <div className="grid grid-cols-3 gap-4 text-sm font-medium text-receipt-text border-b border-receipt-divider pb-2 mb-3">
+        <div className="grid grid-cols-3 gap-4 text-sm font-medium border-b border-receipt-divider pb-2 mb-3" style={{ color: settings.textColor }}>
           <div className="text-right">פריט</div>
           <div className="text-center">כמות</div>
           <div className="text-left">סכום</div>
@@ -101,11 +101,11 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
         <div className="space-y-2 text-sm">
           <div className="grid grid-cols-3 gap-4 py-1">
             <div className="text-right">
-              <div className="text-receipt-text font-medium">פריט</div>
-              <div className="text-xs text-receipt-gray">ברקוד</div>
+              <div className="font-medium" style={{ color: settings.textColor }}>פריט</div>
+              <div className="text-xs opacity-60" style={{ color: settings.textColor }}>ברקוד</div>
             </div>
-            <div className="text-center text-receipt-text">1</div>
-            <div className="text-left text-receipt-text">₪00.00</div>
+            <div className="text-center" style={{ color: settings.textColor }}>1</div>
+            <div className="text-left" style={{ color: settings.textColor }}>₪00.00</div>
           </div>
           
           <div className="grid grid-cols-3 gap-4 py-1">
@@ -139,9 +139,9 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       <div className="px-6 pb-4">
         <div className="max-w-[340px] mx-auto">
           <div className="border-t border-receipt-divider pt-4">
-            <div className="text-sm text-receipt-text">
-              <div className="font-medium mb-1">אשראי</div>
-              <div className="text-receipt-gray">תשלומים: 1 ****1234 ₪00.00</div>
+            <div className="text-sm">
+              <div className="font-medium mb-1" style={{ color: settings.textColor }}>אשראי</div>
+              <div style={{ color: settings.textColor }}>תשלומים: 1 ****1234 ₪00.00</div>
             </div>
           </div>
           <div className="border-b border-receipt-divider pb-4"></div>
@@ -151,16 +151,16 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       {/* Summary */}
       <div className="px-6 pb-4 space-y-1 text-sm">
         <div className="flex justify-between">
-          <div className="text-receipt-gray text-right">סכום ללא מע"מ</div>
-          <div className="text-receipt-text">₪00.00</div>
+          <div className="text-right" style={{ color: settings.textColor }}>סכום ללא מע"מ</div>
+          <div style={{ color: settings.textColor }}>₪00.00</div>
         </div>
         <div className="flex justify-between">
-          <div className="text-receipt-gray text-right">מע"מ</div>
-          <div className="text-receipt-text">₪00.00</div>
+          <div className="text-right" style={{ color: settings.textColor }}>מע"מ</div>
+          <div style={{ color: settings.textColor }}>₪00.00</div>
         </div>
         <div className="flex justify-between">
-          <div className="text-receipt-gray text-right">סכום לתשלום</div>
-          <div className="text-receipt-text">₪00.00</div>
+          <div className="text-right" style={{ color: settings.textColor }}>סכום לתשלום</div>
+          <div style={{ color: settings.textColor }}>₪00.00</div>
         </div>
         <div className="flex justify-between">
           <div className="text-receipt-gray text-right">מספר חשבונית</div>
