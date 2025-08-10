@@ -203,6 +203,7 @@ export default function EditingSidebar({
               : 'border-receipt-border hover:border-receipt-gray'
           }`}
         >
+          <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
           <div className="text-left">
             <p className="text-sm text-receipt-gray">
               {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
@@ -214,7 +215,6 @@ export default function EditingSidebar({
               </p>
             )}
           </div>
-          <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
         </div>
       )}
     </div>
