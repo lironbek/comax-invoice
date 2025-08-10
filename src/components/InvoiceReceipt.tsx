@@ -18,11 +18,8 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
   // Prevent default drag behavior on the entire document
   useEffect(() => {
     const preventDefaults = (e: DragEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest('[data-drop-zone]')) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      e.preventDefault();
+      e.stopPropagation();
     };
 
     document.addEventListener('dragenter', preventDefaults, false);
@@ -138,19 +135,21 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       {/* Company Info Section */}
       <div className="p-6 text-center">
         {/* Small Logo */}
-        <div className="w-[70px] h-[70px] bg-receipt-lightgray mx-auto mb-4 rounded flex items-center justify-center">
-          {settings.logo ? (
-            <img 
-              src={settings.logo} 
-              alt="Logo" 
-              className="w-full h-full object-contain rounded"
-            />
-          ) : (
-            <svg className="w-8 h-8 text-receipt-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002 2z" />
-            </svg>
-          )}
-        </div>
+        <DropZone field="logo" className="flex justify-center mb-4">
+          <div className="w-[70px] h-[70px] bg-receipt-lightgray rounded flex items-center justify-center">
+            {settings.logo ? (
+              <img 
+                src={settings.logo} 
+                alt="Logo" 
+                className="w-full h-full object-contain rounded"
+              />
+            ) : (
+              <svg className="w-8 h-8 text-receipt-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+              </svg>
+            )}
+          </div>
+        </DropZone>
 
         {/* Company Name */}
         <h2 className="text-lg font-bold text-receipt-text mb-1">שם החברה</h2>
@@ -286,23 +285,25 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       </div>
 
       {/* Bottom Banner */}
-      <div className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden">
-        {settings.bottomBanner ? (
-          <img 
-            src={settings.bottomBanner} 
-            alt="Bottom Banner" 
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="flex flex-col items-center text-receipt-gray">
-            <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
-              </svg>
+      <DropZone field="bottomBanner" className="w-full">
+        <div className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden">
+          {settings.bottomBanner ? (
+            <img 
+              src={settings.bottomBanner} 
+              alt="Bottom Banner" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="flex flex-col items-center text-receipt-gray">
+              <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+                </svg>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </DropZone>
 
       {/* Powered By */}
       <div className="px-6 py-4 flex justify-center items-center text-xs border-t border-receipt-divider">
