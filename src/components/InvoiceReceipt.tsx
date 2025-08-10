@@ -39,6 +39,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'copy';
+    console.log('Drag over prevented');
   };
 
   const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
@@ -61,14 +62,20 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
   };
 
   const handleDrop = (e: React.DragEvent, field: 'topBanner' | 'bottomBanner' | 'logo') => {
+    console.log('Drop event triggered for:', field);
     e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.preventDefault();
+    e.nativeEvent.stopPropagation();
     
     setDragStates(prev => ({ ...prev, [field]: false }));
     
     const files = e.dataTransfer.files;
+    console.log('Files in drop:', files.length);
+    
     if (files.length > 0 && onSettingsChange) {
       const file = files[0];
+      console.log('File type:', file.type);
       
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
@@ -77,6 +84,8 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       } else {
         console.error("File is not an image");
       }
+    } else {
+      console.log('No files or onSettingsChange not available');
     }
   };
 
