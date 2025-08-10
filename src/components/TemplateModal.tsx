@@ -76,7 +76,7 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
               value={templateName}
               onChange={(e) => setTemplateName(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && templateName.trim() && handleSave()}
-              className="w-full"
+              className="w-full focus:border-[#5EA30D] focus:ring-[#5EA30D]"
               autoFocus
             />
           </div>
@@ -84,7 +84,10 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
           <Button
             onClick={handleSave}
             disabled={!templateName.trim() || isSaving}
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
+            className="w-full text-white"
+            style={{ backgroundColor: '#5EA30D' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4a8a0b'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#5EA30D'}
           >
             {isSaving ? "שומר..." : "שמור"}
           </Button>
