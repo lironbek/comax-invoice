@@ -27,7 +27,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
     secondaryBannerImage: false
   });
   
-  const fontClass = `font-${font.toLowerCase()}`;
+  const fontClass = `font-${settings.font.toLowerCase()}`;
   const currencySymbol = "₪";
   const hasSocialMedia = Object.values(socialMedia).some(url => url.trim() !== "");
 
@@ -155,8 +155,8 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
               )}
             </DropZone>
             
-            <h2 className="text-xl font-bold mb-1">שם החברה</h2>
-            <h3 className="text-md">שם הסניף</h3>
+            <h2 className="text-xl font-bold mb-1" style={{ color: settings.textColor }}>שם החברה</h2>
+            <h3 className="text-md" style={{ color: settings.textColor }}>שם הסניף</h3>
           </div>
 
           {/* Main Content */}
@@ -165,7 +165,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
             <div className="max-w-[400px] mx-auto">
               <Separator className="my-2" />
               <div className="text-center py-2">
-                <span className="text-2xl font-bold">
+                <span className="text-2xl font-bold" style={{ color: settings.textColor }}>
                   {currencySymbol} 00.0
                 </span>
               </div>

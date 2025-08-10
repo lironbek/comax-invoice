@@ -61,7 +61,13 @@ export default function InvoiceInterface() {
   };
 
   const handleCreateTemplate = () => {
-    console.log("יצירת טמפלט חדש");
+    const templateName = prompt('הכנס שם טמפלט:');
+    if (templateName) {
+      const templateKey = `template_${templateName}`;
+      localStorage.setItem(templateKey, JSON.stringify(settings));
+      alert(`טמפלט "${templateName}" נשמר בהצלחה!`);
+      console.log('Template saved:', templateName, settings);
+    }
   };
 
   const handleReset = () => {

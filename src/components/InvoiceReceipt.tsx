@@ -81,11 +81,11 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
         </div>
 
         {/* Company Name */}
-        <h2 className="text-lg font-bold text-receipt-text mb-1">שם החברה</h2>
-        <p className="text-sm text-receipt-gray mb-4">שם הסניף</p>
+        <h2 className="text-lg font-bold mb-1" style={{ color: settings.textColor }}>שם החברה</h2>
+        <p className="text-sm mb-4" style={{ color: settings.textColor }}>שם הסניף</p>
 
         {/* Total Amount */}
-        <div className="text-2xl font-bold text-receipt-text">₪00.00</div>
+        <div className="text-2xl font-bold" style={{ color: settings.textColor }}>₪00.00</div>
       </div>
 
       {/* Items Table */}
