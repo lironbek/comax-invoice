@@ -237,7 +237,7 @@ export default function EditingSidebar({
             onValueChange={handleTemplateSelect}
             dir="rtl"
           >
-            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D] [&>svg]:hidden" dir="rtl">
+            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto" dir="rtl">
@@ -254,7 +254,7 @@ export default function EditingSidebar({
                   <SelectItem 
                     value="לבן נקי" 
                     className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "לבן נקי" ? "bg-green-50 text-green-700" : "text-gray-700"
+                      settings.template === "לבן נקי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
                     }`}
                   >
                     לבן נקי
@@ -262,7 +262,7 @@ export default function EditingSidebar({
                   <SelectItem 
                     value="צבעוני" 
                     className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "צבעוני" ? "bg-green-50 text-green-700" : "text-gray-700"
+                      settings.template === "צבעוני" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
                     }`}
                   >
                     צבעוני
@@ -270,7 +270,7 @@ export default function EditingSidebar({
                   <SelectItem 
                     value="מינימליסטי" 
                     className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "מינימליסטי" ? "bg-green-50 text-green-700" : "text-gray-700"
+                      settings.template === "מינימליסטי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
                     }`}
                   >
                     מינימליסטי
