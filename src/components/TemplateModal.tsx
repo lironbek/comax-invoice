@@ -67,10 +67,8 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
         
         <div className="space-y-4 pt-4">
           <div>
-            <p className="text-sm text-gray-600 mb-3">
-              בחר שם לטמפלט החדש של העיצוב הנוכחי
-              <br />
-              לשימוש חוזר
+            <p className="text-sm text-gray-600 mb-3 text-center">
+              בחר שם לטמפלט החדש שלך ושמור לשימוש חוזר
             </p>
             
             <Input
