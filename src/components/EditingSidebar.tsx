@@ -1,11 +1,11 @@
-
-import { useState } from "react";
-import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InvoiceSettings } from "./InvoiceInterface";
+import TemplateModal from "./TemplateModal";
 
 interface EditingSidebarProps {
   settings: InvoiceSettings;
@@ -14,6 +14,11 @@ interface EditingSidebarProps {
   onSave: () => void;
   onCreateTemplate: () => void;
   onReset: () => void;
+}
+
+interface CustomTemplate {
+  name: string;
+  settings: InvoiceSettings;
 }
 
 export default function EditingSidebar({
@@ -25,11 +30,35 @@ export default function EditingSidebar({
   onReset,
 }: EditingSidebarProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [dragStates, setDragStates] = useState({
-    topBanner: false,
-    logo: false,
-    bottomBanner: false
-  });
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>([]);
+  
+  // Load custom templates from localStorage on mount
+  useEffect(() => {
+    const loadedTemplates: CustomTemplate[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('custom_template_')) {
+        const templateName = key.replace('custom_template_', '');
+        const templateData = localStorage.getItem(key);
+        if (templateData) {
+          try {
+            const settings = JSON.parse(templateData);
+            loadedTemplates.push({ name: templateName, settings });
+          } catch (e) {
+            console.error('Failed to parse template data', e);
+          }
+        }
+      }
+    }
+    setCustomTemplates(loadedTemplates);
+  }, []);
+
+  const systemTemplates = [
+    { value: "לבן נקי", label: "לבן נקי" },
+    { value: "צבעוני", label: "צבעוני" },
+    { value: "מינימליסטי", label: "מינימליסטי" }
+  ];
 
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
@@ -40,55 +69,9 @@ export default function EditingSidebar({
       if (file) {
         const url = URL.createObjectURL(file);
         onSettingsChange({ [field]: url });
-        console.log(`Image uploaded for ${field}:`, url);
       }
     };
     input.click();
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = 'copy';
-  };
-
-  const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragStates(prev => ({ ...prev, [field]: true }));
-  };
-
-  const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
-    
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      setDragStates(prev => ({ ...prev, [field]: false }));
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent, field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    setDragStates(prev => ({ ...prev, [field]: false }));
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      
-      if (file.type.startsWith('image/')) {
-        const url = URL.createObjectURL(file);
-        onSettingsChange({ [field]: url });
-        console.log(`Image uploaded for ${field}:`, url);
-      } else {
-        console.error("File is not an image");
-      }
-    }
   };
 
   const handleRemoveImage = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
@@ -106,57 +89,78 @@ export default function EditingSidebar({
     setIsSaving(false);
   };
 
+  const handleCreateTemplateClick = () => {
+    setIsTemplateModalOpen(true);
+  };
+
+  const handleSaveTemplate = (templateName: string) => {
+    const templateKey = `custom_template_${templateName}`;
+    localStorage.setItem(templateKey, JSON.stringify(settings));
+    
+    const newTemplate = { name: templateName, settings: { ...settings } };
+    setCustomTemplates(prev => [...prev, newTemplate]);
+    
+    setIsTemplateModalOpen(false);
+  };
+
+  const handleDeleteTemplate = (templateName: string) => {
+    const templateKey = `custom_template_${templateName}`;
+    localStorage.removeItem(templateKey);
+    setCustomTemplates(prev => prev.filter(t => t.name !== templateName));
+  };
+
+  const handleTemplateSelect = (templateValue: string) => {
+    // Check if it's a custom template
+    const customTemplate = customTemplates.find(t => t.name === templateValue);
+    if (customTemplate) {
+      onSettingsChange(customTemplate.settings);
+    } else {
+      // System template
+      onSettingsChange({ template: templateValue });
+    }
+  };
+
   const renderUploadArea = (
     field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>,
     label: string,
     currentImage: string | null
   ) => (
-    <div>
-      <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
+    <div className="space-y-2">
+      <Label className="text-sm font-medium text-receipt-text">{label}</Label>
       {currentImage ? (
-        <div className="relative border-2 border-receipt-border rounded-lg p-4">
-          <img 
-            src={currentImage} 
-            alt={`Uploaded ${label}`}
-            className="w-full h-24 object-cover rounded"
-          />
-          <div className="absolute top-2 right-2 flex gap-2">
+        <div className="border-2 border-green-200 rounded-lg p-4 bg-green-50">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-green-700">קובץ עלה בהצלחה</span>
+            </div>
             <Button
               size="sm"
-              variant="destructive"
+              variant="ghost"
               onClick={() => handleRemoveImage(field)}
-              className="h-6 w-6 p-0"
+              className="h-6 w-6 p-0 text-gray-500 hover:text-red-500"
             >
               <X className="h-3 w-3" />
             </Button>
           </div>
-          <div className="mt-2 text-xs text-receipt-gray text-center">
-            {label} uploaded successfully
-          </div>
+          <img 
+            src={currentImage} 
+            alt={`Uploaded ${label}`}
+            className="w-full h-20 object-cover rounded border"
+          />
         </div>
       ) : (
         <div 
           onClick={() => handleFileUpload(field)}
-          onDragOver={handleDragOver}
-          onDragEnter={(e) => handleDragEnter(e, field)}
-          onDragLeave={(e) => handleDragLeave(e, field)}
-          onDrop={(e) => handleDrop(e, field)}
-          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200 ${
-            dragStates[field] 
-              ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
-              : 'border-receipt-border hover:border-receipt-gray'
-          }`}
+          className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
         >
-          <Upload className="w-8 h-8 mx-auto mb-2 text-receipt-gray" />
-          <p className="text-sm text-receipt-gray">
-            {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
-            {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
+          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+          <p className="text-sm text-gray-600 mb-1">
+            גרור ושחרר קובץ או <span className="text-blue-500 underline">לחץ כאן</span>
           </p>
-          {!dragStates[field] && (
-            <p className="text-xs text-receipt-gray mt-1">
-              PNG, JPG עד 1MB מומלץ 200x200px
-            </p>
-          )}
+          <p className="text-xs text-gray-500">
+            גודל מומלץ 200x200px מקסימום 1MB
+          </p>
         </div>
       )}
     </div>
@@ -167,17 +171,57 @@ export default function EditingSidebar({
       <div className="p-6 space-y-8">
         {/* Template Selection */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים</Label>
-          <Select value={settings.template} onValueChange={(value) => onSettingsChange({ template: value })}>
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="לבן נקי">לבן נקי</SelectItem>
-              <SelectItem value="צבעוני">צבעוני</SelectItem>
-              <SelectItem value="מינימליסטי">מינימליסטי</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים קיימים</Label>
+          
+          {/* System Templates */}
+          <div className="space-y-2 mb-4">
+            {systemTemplates.map((template) => (
+              <div
+                key={template.value}
+                className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+                  settings.template === template.value 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleTemplateSelect(template.value)}
+              >
+                <span className="text-sm font-medium text-receipt-text">{template.label}</span>
+                <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                  {settings.template === template.value && (
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Custom Templates */}
+          {customTemplates.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-receipt-text mb-2">הטמפלטים שלי</h4>
+              {customTemplates.map((template) => (
+                <div
+                  key={template.name}
+                  className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
+                >
+                  <div 
+                    className="flex-1 cursor-pointer"
+                    onClick={() => handleTemplateSelect(template.name)}
+                  >
+                    <span className="text-sm font-medium text-receipt-text">{template.name}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDeleteTemplate(template.name)}
+                    className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Logo & Banners */}
@@ -294,7 +338,7 @@ export default function EditingSidebar({
         </Button>
         
         <Button 
-          onClick={onCreateTemplate}
+          onClick={handleCreateTemplateClick}
           variant="outline" 
           className="w-full border-receipt-border text-receipt-text hover:bg-receipt-lightgray"
         >
@@ -310,6 +354,12 @@ export default function EditingSidebar({
           אפס הכל
         </button>
       </div>
+      
+      <TemplateModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => setIsTemplateModalOpen(false)}
+        onSave={handleSaveTemplate}
+      />
     </div>
   );
 }

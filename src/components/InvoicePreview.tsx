@@ -172,13 +172,13 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
               <Separator className="my-2" />
             </div>
 
-            {/* Invoice Items Header */}
-            <div className="py-2">
-              <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-1">
-                <div>סכום</div>
-                <div className="text-center">כמות</div>
-                <div className="text-right font-bold">פריט</div>
-              </div>
+              {/* Invoice Items Header */}
+              <div className="py-2">
+                <div className="grid grid-cols-3 gap-4 font-bold text-sm mb-1" style={{ color: settings.textColor }}>
+                  <div>סכום</div>
+                  <div className="text-center">כמות</div>
+                  <div className="text-right font-bold">פריט</div>
+                </div>
               
               {/* HR below the title */}
               <Separator className="my-2" />
@@ -203,12 +203,12 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4 py-1 text-sm">
+                <div className="grid grid-cols-3 gap-4 py-1 text-sm" style={{ color: settings.textColor }}>
                   <div>{currencySymbol} 00.00</div>
                   <div className="text-center">1</div>
                   <div className="text-right">
                     <div className="font-bold">פריט</div>
-                    <div className="text-xs text-gray-500">ברקוד</div>
+                    <div className="text-xs opacity-60">ברקוד</div>
                   </div>
                 </div>
                 
@@ -227,7 +227,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
 
             {/* Payment Method with HR framing - aligned right, removed top HR */}
             <div className="text-right py-2">
-              <div className="py-2">
+              <div className="py-2" style={{ color: settings.textColor }}>
                 <div className="font-bold">אשראי</div>
                 <div className="text-sm">{currencySymbol}785.8 1 תשלומים: ****5644</div>
               </div>
@@ -235,7 +235,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
             </div>
 
             {/* Payment Information */}
-            <div className="py-4 space-y-1 text-right text-sm">
+            <div className="py-4 space-y-1 text-right text-sm" style={{ color: settings.textColor }}>
               <div className="grid grid-cols-2">
                 <div className="text-left">{currencySymbol}652.21</div>
                 <div>סכום ללא מע"מ</div>

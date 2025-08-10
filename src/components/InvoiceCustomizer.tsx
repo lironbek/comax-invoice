@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import InvoicePreview from "@/components/InvoicePreview";
 import CustomizationPanel from "@/components/CustomizationPanel";
+import TemplateModal from "@/components/TemplateModal";
 
 export interface InvoiceSettings {
   bannerImage: string | null;
@@ -49,6 +50,8 @@ const defaultSettings: InvoiceSettings = {
 export default function InvoiceCustomizer() {
   const [settings, setSettings] = useState<InvoiceSettings>(defaultSettings);
   const [isSaving, setIsSaving] = useState(false);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [customTemplates, setCustomTemplates] = useState<Array<{name: string, settings: InvoiceSettings}>>([]);
 
   const handleSettingsChange = (newSettings: Partial<InvoiceSettings>) => {
     setSettings((prev) => {
@@ -140,11 +143,18 @@ export default function InvoiceCustomizer() {
   };
 
   const handleCreateTemplate = () => {
-    const templateName = prompt('Enter template name:');
-    if (templateName) {
-      localStorage.setItem(`template_${templateName}`, JSON.stringify(settings));
-      alert(`Template "${templateName}" saved successfully!`);
-    }
+    setIsTemplateModalOpen(true);
+  };
+
+  const handleSaveTemplate = (templateName: string) => {
+    const templateKey = `custom_template_${templateName}`;
+    localStorage.setItem(templateKey, JSON.stringify(settings));
+    
+    // Update custom templates list
+    const newTemplate = { name: templateName, settings: { ...settings } };
+    setCustomTemplates(prev => [...prev, newTemplate]);
+    
+    setIsTemplateModalOpen(false);
   };
 
   const handleReset = () => {
@@ -183,6 +193,12 @@ export default function InvoiceCustomizer() {
           </Card>
         </div>
       </div>
+      
+      <TemplateModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => setIsTemplateModalOpen(false)}
+        onSave={handleSaveTemplate}
+      />
     </div>
   );
 }
