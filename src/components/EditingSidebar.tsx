@@ -197,22 +197,24 @@ export default function EditingSidebar({
           onDragEnter={(e) => handleDragEnter(e, field)}
           onDragLeave={(e) => handleDragLeave(e, field)}
           onDrop={(e) => handleDrop(e, field)}
-          className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-all duration-200 ${
+          className={`border-2 border-dashed rounded-lg p-3 cursor-pointer transition-all duration-200 flex items-center gap-3 ${
             dragStates[field] 
               ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
               : 'border-receipt-border hover:border-receipt-gray'
           }`}
         >
-          <Upload className="w-6 h-6 mx-auto mb-2 text-receipt-gray" />
-          <p className="text-sm text-receipt-gray">
-            {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
-            {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
-          </p>
-          {!dragStates[field] && (
-            <p className="text-xs text-receipt-gray mt-1">
-              PNG, JPG עד 1MB מומלץ 200x200px
+          <div className="flex-1 text-right">
+            <p className="text-sm text-receipt-gray">
+              {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
+              {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
             </p>
-          )}
+            {!dragStates[field] && (
+              <p className="text-xs text-receipt-gray mt-1">
+                PNG, JPG עד 1MB מומלץ 200x200px
+              </p>
+            )}
+          </div>
+          <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
         </div>
       )}
     </div>
