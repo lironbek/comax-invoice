@@ -100,7 +100,7 @@ export default function InvoiceInterface() {
 
         {/* Invoice Receipt - Right Side */}
         <div className="flex-1 p-8 flex justify-center bg-gray-50">
-          <InvoiceReceipt settings={settings} />
+          <InvoiceReceipt settings={settings} onSettingsChange={handleSettingsChange} />
         </div>
       </div>
     </div>
