@@ -237,7 +237,7 @@ export default function EditingSidebar({
             onValueChange={handleTemplateSelect}
             dir="rtl"
           >
-            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
+            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D] [&>svg]:hidden" dir="rtl">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto" dir="rtl">
