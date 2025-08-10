@@ -26,7 +26,14 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
   };
 
   return (
-    <div className="w-full max-w-[390px] bg-white shadow-xl overflow-hidden">
+    <div 
+      className="w-full max-w-[390px] bg-white shadow-xl overflow-hidden"
+      style={{ 
+        backgroundColor: settings.backgroundColor,
+        color: settings.textColor,
+        fontFamily: settings.font
+      }}
+    >
       {/* Top Banner */}
       <div 
         className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"

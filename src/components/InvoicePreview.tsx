@@ -118,7 +118,10 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
       >
         <div 
           className={`w-full max-w-[500px] mx-auto overflow-hidden ${fontClass}`}
-          style={{ backgroundColor }}
+          style={{ 
+            backgroundColor,
+            color: settings.textColor 
+          }}
         >
           {/* Banner Image with Drop Zone */}
           <DropZone field="bannerImage" className="w-full">
@@ -210,7 +213,7 @@ export default function InvoicePreview({ settings, onSettingsChange }: InvoicePr
                 </div>
                 
                 {/* Discount */}
-                <div className="grid grid-cols-3 gap-4 py-2 text-sm text-amber-500">
+                <div className="grid grid-cols-3 gap-4 py-2 text-sm" style={{ color: settings.promotionTextColor }}>
                   <div>{currencySymbol} -00.00</div>
                   <div className="text-center"></div>
                   <div className="text-right">הנחת מבצע</div>

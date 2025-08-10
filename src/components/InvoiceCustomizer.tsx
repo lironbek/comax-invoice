@@ -54,6 +54,12 @@ export default function InvoiceCustomizer() {
     setSettings((prev) => {
       const updated = { ...prev, ...newSettings };
       
+      // Apply template presets when template changes
+      if ('template' in newSettings && newSettings.template !== prev.template) {
+        const templateSettings = getTemplateSettings(newSettings.template!);
+        Object.assign(updated, templateSettings);
+      }
+      
       // Sync topBanner with bannerImage and bottomBanner with secondaryBannerImage
       if ('topBanner' in newSettings) {
         updated.bannerImage = newSettings.topBanner;
@@ -70,6 +76,40 @@ export default function InvoiceCustomizer() {
       
       return updated;
     });
+  };
+
+  const getTemplateSettings = (template: string): Partial<InvoiceSettings> => {
+    switch (template) {
+      case 'לבן נקי':
+        return {
+          backgroundColor: '#ffffff',
+          innerFrameColor: '#f8f9fa',
+          outerFrameColor: '#e9ecef',
+          textColor: '#212529',
+          promotionTextColor: '#dc3545',
+          font: 'Assistant'
+        };
+      case 'צבעוני':
+        return {
+          backgroundColor: '#fff3cd',
+          innerFrameColor: '#ffeaa7',
+          outerFrameColor: '#fdcb6e',
+          textColor: '#2d3436',
+          promotionTextColor: '#e17055',
+          font: 'Assistant'
+        };
+      case 'מינימליסטי':
+        return {
+          backgroundColor: '#f8f9fa',
+          innerFrameColor: '#e9ecef',
+          outerFrameColor: '#dee2e6',
+          textColor: '#495057',
+          promotionTextColor: '#6c757d',
+          font: 'Arial'
+        };
+      default:
+        return {};
+    }
   };
 
   const handleSocialMediaChange = (
@@ -100,7 +140,11 @@ export default function InvoiceCustomizer() {
   };
 
   const handleCreateTemplate = () => {
-    console.log("Create template clicked");
+    const templateName = prompt('Enter template name:');
+    if (templateName) {
+      localStorage.setItem(`template_${templateName}`, JSON.stringify(settings));
+      alert(`Template "${templateName}" saved successfully!`);
+    }
   };
 
   const handleReset = () => {

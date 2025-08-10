@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'assistant': ['Assistant', 'sans-serif'],
+				'arial': ['Arial', 'sans-serif'],
+				'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
