@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check } from "lucide-react";
+import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check, Trash2, FileText, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -235,52 +235,86 @@ export default function EditingSidebar({
           <Select 
             value={settings.template} 
             onValueChange={handleTemplateSelect}
+            dir="rtl"
           >
-            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]">
+            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+            <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto" dir="rtl">
               <div className="p-1">
-                <SelectItem 
-                  value="לבן נקי" 
-                  className="hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-gray-700 text-sm"
-                >
-                  לבן נקי
-                </SelectItem>
-                <SelectItem 
-                  value="צבעוני" 
-                  className="hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-gray-700 text-sm"
-                >
-                  צבעוני
-                </SelectItem>
-                <SelectItem 
-                  value="מינימליסטי" 
-                  className="hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-gray-700 text-sm"
-                >
-                  מינימליסטי
-                </SelectItem>
-                {customTemplates.map((template) => (
-                  <div key={template.name} className="flex items-center justify-between hover:bg-gray-50 px-3 py-2 rounded-md group">
-                    <SelectItem 
-                      value={template.name}
-                      className="flex-1 p-0 hover:bg-transparent focus:bg-transparent cursor-pointer text-gray-700 text-sm"
-                    >
-                      {template.name}
-                    </SelectItem>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDeleteTemplate(template.name);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-gray-400 hover:text-red-500 transition-opacity"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
+                {/* System Templates Category */}
+                <div className="px-3 py-2 border-b border-gray-100">
+                  <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                    <FileText className="w-3 h-3" />
+                    <span>טמפלטים קבועים</span>
                   </div>
-                ))}
+                </div>
+                
+                <div className="pb-2">
+                  <SelectItem 
+                    value="לבן נקי" 
+                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
+                      settings.template === "לבן נקי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                    }`}
+                  >
+                    לבן נקי
+                  </SelectItem>
+                  <SelectItem 
+                    value="צבעוני" 
+                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
+                      settings.template === "צבעוני" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                    }`}
+                  >
+                    צבעוני
+                  </SelectItem>
+                  <SelectItem 
+                    value="מינימליסטי" 
+                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
+                      settings.template === "מינימליסטי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                    }`}
+                  >
+                    מינימליסטי
+                  </SelectItem>
+                </div>
+
+                {/* Custom Templates Category */}
+                {customTemplates.length > 0 && (
+                  <>
+                    <div className="px-3 py-2 border-b border-gray-100">
+                      <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                        <User className="w-3 h-3" />
+                        <span>מותאם אישית</span>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2">
+                      {customTemplates.map((template) => (
+                        <div key={template.name} className="flex items-center justify-between hover:bg-gray-50 px-3 py-2 rounded-md group mr-4">
+                          <SelectItem 
+                            value={template.name}
+                            className={`flex-1 p-0 hover:bg-transparent focus:bg-transparent cursor-pointer text-sm ${
+                              settings.template === template.name ? "bg-green-50 text-green-700" : "text-gray-700"
+                            }`}
+                          >
+                            {template.name}
+                          </SelectItem>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteTemplate(template.name);
+                            }}
+                            className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-gray-400 hover:text-red-500 transition-opacity ml-2"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </SelectContent>
           </Select>
