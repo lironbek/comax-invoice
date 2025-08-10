@@ -91,7 +91,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       {/* Items Table */}
       <div className="px-6 pb-4">
         {/* Headers */}
-        <div className="grid grid-cols-3 gap-4 text-sm font-medium border-b border-receipt-divider pb-2 mb-3" style={{ color: settings.textColor }}>
+        <div className="grid grid-cols-3 gap-4 text-sm font-bold border-b border-receipt-divider pb-2 mb-3" style={{ color: settings.textColor }}>
           <div className="text-right">פריט</div>
           <div className="text-center">כמות</div>
           <div className="text-left">סכום</div>
