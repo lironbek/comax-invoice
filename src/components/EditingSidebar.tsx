@@ -337,11 +337,11 @@ export default function EditingSidebar({
         {/* Font Selection */}
         <div>
           <Label className="text-base font-medium mb-3 block text-receipt-text">גופן</Label>
-          <Select value={settings.font} onValueChange={(value) => onSettingsChange({ font: value })}>
-            <SelectTrigger className="w-full">
+          <Select value={settings.font} onValueChange={(value) => onSettingsChange({ font: value })} dir="rtl">
+            <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent dir="rtl">
               <SelectItem value="Assistant">Assistant</SelectItem>
               <SelectItem value="Arial">Arial</SelectItem>
               <SelectItem value="Helvetica">Helvetica</SelectItem>
