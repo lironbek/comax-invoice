@@ -62,12 +62,7 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">יצירת טמפלט חדש</DialogTitle>
-            <Button variant="ghost" size="icon" onClick={handleClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-lg font-semibold">יצירת טמפלט חדש</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4 pt-4">
