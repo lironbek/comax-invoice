@@ -1,7 +1,4 @@
-
 import { InvoiceSettings } from "./InvoiceInterface";
-import { useState, useEffect } from "react";
-import { Upload } from "lucide-react";
 
 interface InvoiceReceiptProps {
   settings: InvoiceSettings;
@@ -9,151 +6,72 @@ interface InvoiceReceiptProps {
 }
 
 export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceReceiptProps) {
-  const [dragStates, setDragStates] = useState({
-    topBanner: false,
-    bottomBanner: false,
-    logo: false
-  });
-
-  // Prevent default drag behavior on the entire document
-  useEffect(() => {
-    const preventDefaults = (e: DragEvent) => {
-      // Only prevent defaults if we're not within our drop zones
-      const target = e.target as HTMLElement;
-      if (!target.closest('[data-drop-zone]')) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-
-    document.addEventListener('dragenter', preventDefaults, false);
-    document.addEventListener('dragover', preventDefaults, false);
-    document.addEventListener('dragleave', preventDefaults, false);
-    document.addEventListener('drop', preventDefaults, false);
-
-    return () => {
-      document.removeEventListener('dragenter', preventDefaults);
-      document.removeEventListener('dragover', preventDefaults);
-      document.removeEventListener('dragleave', preventDefaults);
-      document.removeEventListener('drop', preventDefaults);
-    };
-  }, []);
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = 'copy';
-  };
-
-  const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragStates(prev => ({ ...prev, [field]: true }));
-  };
-
-  const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
+  
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, field: 'topBanner' | 'bottomBanner' | 'logo') => {
     e.preventDefault();
     e.stopPropagation();
     
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith('image/'));
     
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      setDragStates(prev => ({ ...prev, [field]: false }));
+    if (imageFile && onSettingsChange) {
+      const imageUrl = URL.createObjectURL(imageFile);
+      onSettingsChange({ [field]: imageUrl });
     }
   };
 
-  const handleDrop = (e: React.DragEvent, field: 'topBanner' | 'bottomBanner' | 'logo') => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    setDragStates(prev => ({ ...prev, [field]: false }));
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && onSettingsChange) {
-      const file = files[0];
-      
-      if (file.type.startsWith('image/')) {
-        const url = URL.createObjectURL(file);
-        onSettingsChange({ [field]: url });
-        console.log(`Image uploaded for ${field}:`, url);
-      } else {
-        console.error("File is not an image");
-      }
-    }
   };
-
-  const DropZone = ({ 
-    field, 
-    children, 
-    className 
-  }: { 
-    field: 'topBanner' | 'bottomBanner' | 'logo'; 
-    children: React.ReactNode; 
-    className?: string; 
-  }) => (
-    <div
-      data-drop-zone="true"
-      className={`relative ${className || ''} ${dragStates[field] ? 'ring-2 ring-blue-400 ring-opacity-50 bg-blue-50' : ''} transition-all duration-200`}
-      onDragOver={handleDragOver}
-      onDragEnter={(e) => handleDragEnter(e, field)}
-      onDragLeave={(e) => handleDragLeave(e, field)}
-      onDrop={(e) => handleDrop(e, field)}
-    >
-      {children}
-      {dragStates[field] && (
-        <div className="absolute inset-0 bg-blue-100 bg-opacity-80 flex items-center justify-center z-10 rounded border-2 border-dashed border-blue-400">
-          <div className="text-center">
-            <Upload className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-            <p className="text-sm text-blue-700 font-medium">Drop image here</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="w-full max-w-[390px] bg-white shadow-xl overflow-hidden">
       {/* Top Banner */}
-      <DropZone field="topBanner" className="w-full">
-        <div className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden">
-          {settings.topBanner ? (
-            <img 
-              src={settings.topBanner} 
-              alt="Banner" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="flex flex-col items-center text-receipt-gray">
-              <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
-                </svg>
-              </div>
+      <div 
+        className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"
+        onDrop={(e) => handleDrop(e, 'topBanner')}
+        onDragOver={handleDragOver}
+        onDragEnter={(e) => e.preventDefault()}
+      >
+        {settings.topBanner ? (
+          <img 
+            src={settings.topBanner} 
+            alt="Banner" 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex flex-col items-center text-receipt-gray">
+            <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+              </svg>
             </div>
-          )}
-        </div>
-      </DropZone>
+          </div>
+        )}
+      </div>
 
       {/* Company Info Section */}
       <div className="p-6 text-center">
         {/* Small Logo */}
-        <DropZone field="logo" className="flex justify-center mb-4">
-          <div className="w-[70px] h-[70px] bg-receipt-lightgray rounded flex items-center justify-center">
-            {settings.logo ? (
-              <img 
-                src={settings.logo} 
-                alt="Logo" 
-                className="w-full h-full object-contain rounded"
-              />
-            ) : (
-              <svg className="w-8 h-8 text-receipt-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
-              </svg>
-            )}
-          </div>
-        </DropZone>
+        <div 
+          className="w-[70px] h-[70px] bg-receipt-lightgray mx-auto mb-4 rounded flex items-center justify-center cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"
+          onDrop={(e) => handleDrop(e, 'logo')}
+          onDragOver={handleDragOver}
+          onDragEnter={(e) => e.preventDefault()}
+        >
+          {settings.logo ? (
+            <img 
+              src={settings.logo} 
+              alt="Logo" 
+              className="w-full h-full object-contain rounded"
+            />
+          ) : (
+            <svg className="w-8 h-8 text-receipt-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+            </svg>
+          )}
+        </div>
 
         {/* Company Name */}
         <h2 className="text-lg font-bold text-receipt-text mb-1">שם החברה</h2>
@@ -289,25 +207,28 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       </div>
 
       {/* Bottom Banner */}
-      <DropZone field="bottomBanner" className="w-full">
-        <div className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden">
-          {settings.bottomBanner ? (
-            <img 
-              src={settings.bottomBanner} 
-              alt="Bottom Banner" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="flex flex-col items-center text-receipt-gray">
-              <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
-                </svg>
-              </div>
+      <div 
+        className="w-full h-[180px] bg-receipt-lightgray flex items-center justify-center overflow-hidden cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"
+        onDrop={(e) => handleDrop(e, 'bottomBanner')}
+        onDragOver={handleDragOver}
+        onDragEnter={(e) => e.preventDefault()}
+      >
+        {settings.bottomBanner ? (
+          <img 
+            src={settings.bottomBanner} 
+            alt="Bottom Banner" 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="flex flex-col items-center text-receipt-gray">
+            <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+              </svg>
             </div>
-          )}
-        </div>
-      </DropZone>
+          </div>
+        )}
+      </div>
 
       {/* Powered By */}
       <div className="px-6 py-4 flex justify-center items-center text-xs border-t border-receipt-divider">
