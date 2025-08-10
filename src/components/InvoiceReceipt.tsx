@@ -9,16 +9,16 @@ interface InvoiceReceiptProps {
 }
 
 export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceReceiptProps) {
-  console.log('InvoiceReceipt rendered with onSettingsChange:', !!onSettingsChange);
   const [dragStates, setDragStates] = useState({
     topBanner: false,
     bottomBanner: false,
     logo: false
   });
 
-  // Prevent default drag behavior only for non-drop-zone areas
+  // Prevent default drag behavior on the entire document
   useEffect(() => {
     const preventDefaults = (e: DragEvent) => {
+      // Only prevent defaults if we're not within our drop zones
       const target = e.target as HTMLElement;
       if (!target.closest('[data-drop-zone]')) {
         e.preventDefault();
@@ -26,11 +26,15 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       }
     };
 
+    document.addEventListener('dragenter', preventDefaults, false);
     document.addEventListener('dragover', preventDefaults, false);
+    document.addEventListener('dragleave', preventDefaults, false);
     document.addEventListener('drop', preventDefaults, false);
 
     return () => {
+      document.removeEventListener('dragenter', preventDefaults);
       document.removeEventListener('dragover', preventDefaults);
+      document.removeEventListener('dragleave', preventDefaults);
       document.removeEventListener('drop', preventDefaults);
     };
   }, []);
@@ -39,7 +43,6 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'copy';
-    console.log('Drag over prevented');
   };
 
   const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
@@ -62,20 +65,14 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
   };
 
   const handleDrop = (e: React.DragEvent, field: 'topBanner' | 'bottomBanner' | 'logo') => {
-    console.log('Drop event triggered for:', field);
     e.preventDefault();
     e.stopPropagation();
-    e.nativeEvent.preventDefault();
-    e.nativeEvent.stopPropagation();
     
     setDragStates(prev => ({ ...prev, [field]: false }));
     
     const files = e.dataTransfer.files;
-    console.log('Files in drop:', files.length);
-    
     if (files.length > 0 && onSettingsChange) {
       const file = files[0];
-      console.log('File type:', file.type);
       
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
@@ -84,8 +81,6 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       } else {
         console.error("File is not an image");
       }
-    } else {
-      console.log('No files or onSettingsChange not available');
     }
   };
 
