@@ -228,7 +228,7 @@ export default function EditingSidebar({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-6 space-y-8">
+      <div className="pl-4 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
           <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים</Label>
