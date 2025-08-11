@@ -13,6 +13,9 @@ export interface InvoiceSettings {
   backgroundColor: string;
   textColor: string;
   promotionTextColor: string;
+  topBannerIsPromotional: boolean;
+  logoIsPromotional: boolean;
+  bottomBannerIsPromotional: boolean;
   socialMedia: {
     facebook: string;
     instagram: string;
@@ -29,6 +32,9 @@ const defaultSettings: InvoiceSettings = {
   backgroundColor: "#ffffff",
   textColor: "#1B2534",
   promotionTextColor: "#E69409",
+  topBannerIsPromotional: false,
+  logoIsPromotional: false,
+  bottomBannerIsPromotional: false,
   socialMedia: {
     facebook: "",
     instagram: "",

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check, Trash2, FileText, User } from "lucide-react";
+import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check, Trash2, FileText, User, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InvoiceSettings } from "./InvoiceInterface";
 import TemplateModal from "./TemplateModal";
@@ -167,57 +169,104 @@ export default function EditingSidebar({
     field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>,
     label: string,
     currentImage: string | null
-  ) => (
-    <div>
-      <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
-      {currentImage ? (
-        <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm text-green-700">קובץ עלה בהצלחה</span>
+  ) => {
+    const promotionalFieldMap = {
+      'topBanner': 'topBannerIsPromotional',
+      'logo': 'logoIsPromotional',
+      'bottomBanner': 'bottomBannerIsPromotional'
+    } as const;
+    
+    const promotionalField = promotionalFieldMap[field] as keyof InvoiceSettings;
+    const isPromotional = settings[promotionalField] as boolean;
+
+    return (
+      <div>
+        <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
+        {currentImage ? (
+          <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm text-green-700">קובץ עלה בהצלחה</span>
+            </div>
+            <img 
+              src={currentImage} 
+              alt={`Uploaded ${label}`}
+              className="w-full h-16 object-cover rounded"
+            />
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => handleRemoveImage(field)}
+              className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-500 hover:text-red-500"
+            >
+              <X className="h-3 w-3" />
+            </Button>
           </div>
-          <img 
-            src={currentImage} 
-            alt={`Uploaded ${label}`}
-            className="w-full h-16 object-cover rounded"
-          />
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleRemoveImage(field)}
-            className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-500 hover:text-red-500"
+        ) : (
+          <div 
+            onClick={() => handleFileUpload(field)}
+            onDragOver={handleDragOver}
+            onDragEnter={(e) => handleDragEnter(e, field)}
+            onDragLeave={(e) => handleDragLeave(e, field)}
+            onDrop={(e) => handleDrop(e, field)}
+            className={`border-2 border-dashed rounded-lg p-3 cursor-pointer transition-all duration-200 flex items-center gap-3 ${
+              dragStates[field] 
+                ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
+                : 'border-receipt-border hover:border-receipt-gray'
+            }`}
           >
-            <X className="h-3 w-3" />
-          </Button>
-        </div>
-      ) : (
-        <div 
-          onClick={() => handleFileUpload(field)}
-          onDragOver={handleDragOver}
-          onDragEnter={(e) => handleDragEnter(e, field)}
-          onDragLeave={(e) => handleDragLeave(e, field)}
-          onDrop={(e) => handleDrop(e, field)}
-          className={`border-2 border-dashed rounded-lg p-3 cursor-pointer transition-all duration-200 flex items-center gap-3 ${
-            dragStates[field] 
-              ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
-              : 'border-receipt-border hover:border-receipt-gray'
-          }`}
-        >
-          <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
-          <div className="text-left">
-            <p className="text-sm text-receipt-gray">
-              {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
-              {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
-            </p>
-            {!dragStates[field] && (
-              <p className="text-xs text-receipt-gray mt-1">
-                PNG, JPG עד 1MB מומלץ 200x200px
+            <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
+            <div className="text-left">
+              <p className="text-sm text-receipt-gray">
+                {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
+                {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
               </p>
-            )}
+              {!dragStates[field] && (
+                <p className="text-xs text-receipt-gray mt-1">
+                  PNG, JPG עד 1MB מומלץ 200x200px
+                </p>
+              )}
+            </div>
           </div>
+        )}
+        
+        {/* Promotional Content Question */}
+        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <Label className="text-sm text-receipt-text">התמונה מכילה תוכן שיווקי:</Label>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-sm p-3" dir="rtl">
+                  <p className="text-sm">
+                    יש להגדיר האם התמונה שהועלתה מכילה תוכן שיווקי.<br/>
+                    במידה והתמונה מכילה תוכן שיווקי עליכם להגדיר זאת.<br/>
+                    בכניסה לחשבונית, במידה והלקוח בחר לא להציג תוכן שיווקי, התמונות המכילות תוכן שיווקי לא יוצגו, זאת בהתאם לחוק בישראל
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <RadioGroup 
+            value={isPromotional ? "yes" : "no"} 
+            onValueChange={(value) => onSettingsChange({ [promotionalField]: value === "yes" })}
+            className="flex gap-6"
+            dir="rtl"
+          >
+            <div className="flex items-center space-x-2 space-x-reverse">
+              <RadioGroupItem value="yes" id={`${field}-yes`} />
+              <Label htmlFor={`${field}-yes`} className="text-sm">כן</Label>
+            </div>
+            <div className="flex items-center space-x-2 space-x-reverse">
+              <RadioGroupItem value="no" id={`${field}-no`} />
+              <Label htmlFor={`${field}-no`} className="text-sm">לא</Label>
+            </div>
+          </RadioGroup>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  };
 
   // Combine system and custom templates for dropdown
   const allTemplates = [
