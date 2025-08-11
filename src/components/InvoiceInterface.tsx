@@ -106,7 +106,7 @@ export default function InvoiceInterface() {
       {/* Main Content */}
       <div className="flex"> 
         {/* Editing Sidebar - Left Side */}
-        <div className="w-[630px] border-r border-receipt-border bg-white">
+        <div className="w-[320px] border-r border-receipt-border bg-white">
           <EditingSidebar
             settings={settings}
             onSettingsChange={handleSettingsChange}
