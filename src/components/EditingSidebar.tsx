@@ -353,7 +353,7 @@ export default function EditingSidebar({
 
         {/* Colors */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">צבעים</Label>
+          <Label className="text-base font-bold mb-3 block text-receipt-text">צבעים</Label>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">רקע</Label>
