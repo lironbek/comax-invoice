@@ -173,7 +173,6 @@ export default function EditingSidebar({
       {currentImage ? (
         <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
           <div className="flex items-center gap-2 mb-2">
-            <Check className="w-4 h-4 text-green-600" />
             <span className="text-sm text-green-700">קובץ עלה בהצלחה</span>
           </div>
           <img 
