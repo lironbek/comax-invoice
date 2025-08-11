@@ -250,7 +250,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
               <img 
                 src="/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png" 
                 alt="Facebook" 
-                className="w-full h-full object-contain"
+                className="w-8 h-8 object-contain"
               />
             </a>
           )}
@@ -264,7 +264,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
               <img 
                 src="/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png" 
                 alt="Instagram" 
-                className="w-full h-full object-contain"
+                className="w-8 h-8 object-contain"
               />
             </a>
           )}
@@ -278,7 +278,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
               <img 
                 src="/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png" 
                 alt="TikTok" 
-                className="w-full h-full object-contain"
+                className="w-8 h-8 object-contain"
               />
             </a>
           )}
