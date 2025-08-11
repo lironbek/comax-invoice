@@ -228,7 +228,8 @@ export default function EditingSidebar({
   ];
 
   return (
-    <div className="h-full overflow-y-auto w-[400px]">
+    <div className="h-full w-[400px] flex flex-col">
+      {/* Fixed top section - up to font menu */}
       <div className="pl-6 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
@@ -349,7 +350,10 @@ export default function EditingSidebar({
             </SelectContent>
           </Select>
         </div>
+      </div>
 
+      {/* Scrollable section for remaining options */}
+      <div className="flex-1 overflow-y-auto pl-6 pr-6 space-y-8">
         {/* Colors */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">צבעים</Label>
@@ -389,7 +393,7 @@ export default function EditingSidebar({
         {/* Social Media Links */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
-          <div className="space-y-3">
+          <div className="space-y-3 pb-6">
             <div className="flex items-center gap-3">
               <Facebook className="w-5 h-5 text-blue-600" />
               <Input
