@@ -48,9 +48,9 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <Check className="w-8 h-8 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold text-center mb-2">הטמפלט נשמר בהצלחה!</h3>
+            <h3 className="text-lg font-semibold text-center mb-2">התבנית נשמרה בהצלחה!</h3>
             <p className="text-sm text-gray-600 text-center">
-              הטמפלט "{templateName}" נוסף לרשימת הטמפלטים שלך
+              התבנית "{templateName}" נוספה לרשימת התבניות שלך
             </p>
           </div>
         </DialogContent>
@@ -62,17 +62,17 @@ export default function TemplateModal({ isOpen, onClose, onSave }: TemplateModal
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-center">יצירת טמפלט חדש</DialogTitle>
+          <DialogTitle className="text-lg font-semibold text-center">יצירת תבנית חדשה</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4 pt-4">
           <div>
             <p className="text-sm text-gray-600 mb-3 text-center">
-              בחר שם לטמפלט החדש שלך ושמור לשימוש חוזר
+              בחר שם לתבנית החדשה שלך ושמור לשימוש חוזר
             </p>
             
             <Input
-              placeholder="הזן שם לטמפלט שלך"
+              placeholder="הזן שם לתבנית שלך"
               value={templateName}
               onChange={(e) => setTemplateName(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && templateName.trim() && handleSave()}

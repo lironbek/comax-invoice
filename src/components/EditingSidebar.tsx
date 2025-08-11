@@ -282,7 +282,7 @@ export default function EditingSidebar({
       <div className="pl-6 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
-          <Label className="text-base font-bold mb-3 block text-receipt-text">טמפלטים</Label>
+          <Label className="text-base font-bold mb-3 block text-receipt-text">תבניות</Label>
           <Select 
             value={settings.template} 
             onValueChange={handleTemplateSelect}
@@ -297,7 +297,7 @@ export default function EditingSidebar({
                 <div className="px-3 py-2 border-b border-gray-100">
                   <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
                     <FileText className="w-3 h-3" />
-                    <span>טמפלטים קבועים</span>
+                    <span>תבניות קבועות</span>
                   </div>
                 </div>
                 
@@ -511,7 +511,7 @@ export default function EditingSidebar({
           className="w-full border-receipt-border text-receipt-text hover:bg-receipt-lightgray"
         >
           <Plus className="w-4 h-4 ml-2" />
-          צור טמפלט
+          צור תבנית
         </Button>
         
         <button 

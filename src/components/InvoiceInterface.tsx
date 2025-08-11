@@ -123,11 +123,11 @@ export default function InvoiceInterface() {
   };
 
   const handleCreateTemplate = () => {
-    const templateName = prompt('הכנס שם טמפלט:');
+    const templateName = prompt('הכנס שם תבנית:');
     if (templateName) {
       const templateKey = `template_${templateName}`;
       localStorage.setItem(templateKey, JSON.stringify(settings));
-      alert(`טמפלט "${templateName}" נשמר בהצלחה!`);
+      alert(`תבנית "${templateName}" נשמרה בהצלחה!`);
       console.log('Template saved:', templateName, settings);
     }
   };
