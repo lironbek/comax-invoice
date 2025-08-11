@@ -450,7 +450,11 @@ export default function EditingSidebar({
           <Label className="text-base font-bold mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
           <div className="space-y-3 pb-6">
             <div className="flex items-center gap-3">
-              <Facebook className="w-5 h-5 text-blue-600" />
+              <img 
+                src="/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png" 
+                alt="Facebook" 
+                className="w-5 h-5 object-contain"
+              />
               <Input
                 placeholder="הזן כתובת URL"
                 value={settings.socialMedia.facebook}
@@ -460,7 +464,11 @@ export default function EditingSidebar({
             </div>
             
             <div className="flex items-center gap-3">
-              <Instagram className="w-5 h-5 text-pink-600" />
+              <img 
+                src="/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png" 
+                alt="Instagram" 
+                className="w-5 h-5 object-contain"
+              />
               <Input
                 placeholder="הזן כתובת URL"
                 value={settings.socialMedia.instagram}
@@ -470,7 +478,11 @@ export default function EditingSidebar({
             </div>
             
             <div className="flex items-center gap-3">
-              <MessageSquare className="w-5 h-5 text-receipt-gray" />
+              <img 
+                src="/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png" 
+                alt="TikTok" 
+                className="w-5 h-5 object-contain"
+              />
               <Input
                 placeholder="הזן כתובת URL"
                 value={settings.socialMedia.other}
