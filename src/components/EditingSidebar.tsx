@@ -324,7 +324,7 @@ export default function EditingSidebar({
 
         {/* Logo & Banners */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">לוגו ובאנרים</Label>
+          <Label className="text-base font-bold mb-3 block text-receipt-text">לוגו ובאנרים</Label>
           <p className="text-sm text-receipt-gray mb-4">
             באמצעות עריכת התמונות יהיה ניתן להכניס טקסט הבנקת שדות התוצרת
           </p>
