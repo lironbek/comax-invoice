@@ -352,9 +352,11 @@ export default function EditingSidebar({
               <SelectValue />
             </SelectTrigger>
             <SelectContent dir="rtl">
-              <SelectItem value="Assistant">Assistant</SelectItem>
               <SelectItem value="Arial">Arial</SelectItem>
-              <SelectItem value="Helvetica">Helvetica</SelectItem>
+              <SelectItem value="Assistant">Assistant</SelectItem>
+              <SelectItem value="Noto Sans Hebrew">Noto Sans Hebrew</SelectItem>
+              <SelectItem value="Open Sans">Open Sans</SelectItem>
+              <SelectItem value="Rubik">Rubik</SelectItem>
             </SelectContent>
           </Select>
         </div>

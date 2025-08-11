@@ -22,6 +22,9 @@ export default {
 				'assistant': ['Assistant', 'sans-serif'],
 				'arial': ['Arial', 'sans-serif'],
 				'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
+				'noto-sans-hebrew': ['Noto Sans Hebrew', 'sans-serif'],
+				'open-sans': ['Open Sans', 'sans-serif'],
+				'rubik': ['Rubik', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
