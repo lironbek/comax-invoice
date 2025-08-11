@@ -48,11 +48,15 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
             className="w-full h-full object-cover"
           />
         ) : (
-          <img 
-            src="/lovable-uploads/fbd5915b-2129-4470-b533-b322aac41b1a.png" 
-            alt="Banner Placeholder" 
-            className="w-full h-full object-cover"
-          />
+          <div className="flex flex-col items-center text-receipt-gray">
+            <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
+              <img 
+                src="/lovable-uploads/fbd5915b-2129-4470-b533-b322aac41b1a.png" 
+                alt="Banner Placeholder" 
+                className="w-10 h-10 object-contain"
+              />
+            </div>
+          </div>
         )}
       </div>
 
@@ -75,7 +79,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
             <img 
               src="/lovable-uploads/fbd5915b-2129-4470-b533-b322aac41b1a.png" 
               alt="Logo Placeholder" 
-              className="w-full h-full object-contain rounded"
+              className="w-16 h-16 object-contain"
             />
           )}
         </div>
@@ -227,11 +231,15 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
             className="w-full h-full object-cover"
           />
         ) : (
-          <img 
-            src="/lovable-uploads/fbd5915b-2129-4470-b533-b322aac41b1a.png" 
-            alt="Bottom Banner Placeholder" 
-            className="w-full h-full object-cover"
-          />
+          <div className="flex flex-col items-center text-receipt-gray">
+            <div className="w-16 h-16 bg-white rounded flex items-center justify-center mb-2">
+              <img 
+                src="/lovable-uploads/fbd5915b-2129-4470-b533-b322aac41b1a.png" 
+                alt="Bottom Banner Placeholder" 
+                className="w-10 h-10 object-contain"
+              />
+            </div>
+          </div>
         )}
       </div>
 
