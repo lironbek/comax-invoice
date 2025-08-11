@@ -8,7 +8,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InvoiceSettings } from "./InvoiceInterface";
 import TemplateModal from "./TemplateModal";
-
 interface EditingSidebarProps {
   settings: InvoiceSettings;
   onSettingsChange: (settings: Partial<InvoiceSettings>) => void;
@@ -17,19 +16,17 @@ interface EditingSidebarProps {
   onCreateTemplate: () => void;
   onReset: () => void;
 }
-
 interface CustomTemplate {
   name: string;
   settings: InvoiceSettings;
 }
-
 export default function EditingSidebar({
   settings,
   onSettingsChange,
   onSocialMediaChange,
   onSave,
   onCreateTemplate,
-  onReset,
+  onReset
 }: EditingSidebarProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
@@ -51,7 +48,10 @@ export default function EditingSidebar({
         if (templateData) {
           try {
             const settings = JSON.parse(templateData);
-            loadedTemplates.push({ name: templateName, settings });
+            loadedTemplates.push({
+              name: templateName,
+              settings
+            });
           } catch (e) {
             console.error('Failed to parse template data', e);
           }
@@ -60,100 +60,103 @@ export default function EditingSidebar({
     }
     setCustomTemplates(loadedTemplates);
   }, []);
-
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.onchange = (e) => {
+    input.onchange = e => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         const url = URL.createObjectURL(file);
-        onSettingsChange({ [field]: url });
+        onSettingsChange({
+          [field]: url
+        });
       }
     };
     input.click();
   };
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'copy';
   };
-
   const handleDragEnter = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragStates(prev => ({ ...prev, [field]: true }));
+    setDragStates(prev => ({
+      ...prev,
+      [field]: true
+    }));
   };
-
   const handleDragLeave = (e: React.DragEvent, field: keyof typeof dragStates) => {
     e.preventDefault();
     e.stopPropagation();
-    
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
-    
     if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      setDragStates(prev => ({ ...prev, [field]: false }));
+      setDragStates(prev => ({
+        ...prev,
+        [field]: false
+      }));
     }
   };
-
   const handleDrop = (e: React.DragEvent, field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    setDragStates(prev => ({ ...prev, [field]: false }));
-    
+    setDragStates(prev => ({
+      ...prev,
+      [field]: false
+    }));
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       const file = files[0];
-      
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
-        onSettingsChange({ [field]: url });
+        onSettingsChange({
+          [field]: url
+        });
       } else {
         console.error("File is not an image");
       }
     }
   };
-
   const handleRemoveImage = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
-    onSettingsChange({ [field]: null });
+    onSettingsChange({
+      [field]: null
+    });
   };
-
   const handleColorChange = (field: string, value: string) => {
-    onSettingsChange({ [field]: value });
+    onSettingsChange({
+      [field]: value
+    });
   };
-
   const handleSaveClick = async () => {
     setIsSaving(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     onSave();
     setIsSaving(false);
   };
-
   const handleCreateTemplateClick = () => {
     setIsTemplateModalOpen(true);
   };
-
   const handleSaveTemplate = (templateName: string) => {
     const templateKey = `custom_template_${templateName}`;
     localStorage.setItem(templateKey, JSON.stringify(settings));
-    
-    const newTemplate = { name: templateName, settings: { ...settings } };
+    const newTemplate = {
+      name: templateName,
+      settings: {
+        ...settings
+      }
+    };
     setCustomTemplates(prev => [...prev, newTemplate]);
-    
     setIsTemplateModalOpen(false);
   };
-
   const handleDeleteTemplate = (templateName: string) => {
     const templateKey = `custom_template_${templateName}`;
     localStorage.removeItem(templateKey);
     setCustomTemplates(prev => prev.filter(t => t.name !== templateName));
   };
-
   const handleTemplateSelect = (templateValue: string) => {
     // Check if it's a custom template
     const customTemplate = customTemplates.find(t => t.name === templateValue);
@@ -161,73 +164,41 @@ export default function EditingSidebar({
       onSettingsChange(customTemplate.settings);
     } else {
       // System template
-      onSettingsChange({ template: templateValue });
+      onSettingsChange({
+        template: templateValue
+      });
     }
   };
-
-  const renderUploadArea = (
-    field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>,
-    label: string,
-    currentImage: string | null
-  ) => {
+  const renderUploadArea = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>, label: string, currentImage: string | null) => {
     const promotionalFieldMap = {
       'topBanner': 'topBannerIsPromotional',
       'logo': 'logoIsPromotional',
       'bottomBanner': 'bottomBannerIsPromotional'
     } as const;
-    
     const promotionalField = promotionalFieldMap[field] as keyof InvoiceSettings;
     const isPromotional = settings[promotionalField] as boolean;
-
-    return (
-      <div>
+    return <div>
         <Label className="text-sm font-medium mb-2 block text-receipt-text">{label}</Label>
-        {currentImage ? (
-          <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
+        {currentImage ? <div className="relative border-2 border-green-300 rounded-lg p-3 bg-green-50">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm text-green-700">קובץ עלה בהצלחה</span>
             </div>
-            <img 
-              src={currentImage} 
-              alt={`Uploaded ${label}`}
-              className="w-full h-16 object-cover rounded"
-            />
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => handleRemoveImage(field)}
-              className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-500 hover:text-red-500"
-            >
+            <img src={currentImage} alt={`Uploaded ${label}`} className="w-full h-16 object-cover rounded" />
+            <Button size="sm" variant="ghost" onClick={() => handleRemoveImage(field)} className="absolute top-1 right-1 h-6 w-6 p-0 text-gray-500 hover:text-red-500">
               <X className="h-3 w-3" />
             </Button>
-          </div>
-        ) : (
-          <div 
-            onClick={() => handleFileUpload(field)}
-            onDragOver={handleDragOver}
-            onDragEnter={(e) => handleDragEnter(e, field)}
-            onDragLeave={(e) => handleDragLeave(e, field)}
-            onDrop={(e) => handleDrop(e, field)}
-            className={`border-2 border-dashed rounded-lg p-3 cursor-pointer transition-all duration-200 flex items-center gap-3 ${
-              dragStates[field] 
-                ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' 
-                : 'border-receipt-border hover:border-receipt-gray'
-            }`}
-          >
+          </div> : <div onClick={() => handleFileUpload(field)} onDragOver={handleDragOver} onDragEnter={e => handleDragEnter(e, field)} onDragLeave={e => handleDragLeave(e, field)} onDrop={e => handleDrop(e, field)} className={`border-2 border-dashed rounded-lg p-3 cursor-pointer transition-all duration-200 flex items-center gap-3 ${dragStates[field] ? 'border-blue-400 bg-blue-50 ring-2 ring-blue-400 ring-opacity-50' : 'border-receipt-border hover:border-receipt-gray'}`}>
             <Upload className="w-6 h-6 text-receipt-gray flex-shrink-0" />
             <div className="text-left">
               <p className="text-sm text-receipt-gray">
                 {dragStates[field] ? 'Drop image here' : 'גרור ושחרר קובץ או'}{" "}
                 {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
               </p>
-              {!dragStates[field] && (
-                <p className="text-xs text-receipt-gray mt-1">
+              {!dragStates[field] && <p className="text-xs text-receipt-gray mt-1">
                   PNG, JPG עד 1MB מומלץ 200x200px
-                </p>
-              )}
+                </p>}
             </div>
-          </div>
-        )}
+          </div>}
         
         {/* Promotional Content Question */}
         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
@@ -240,20 +211,17 @@ export default function EditingSidebar({
                 </TooltipTrigger>
                 <TooltipContent className="max-w-sm p-3" dir="rtl">
                   <p className="text-sm">
-                    יש להגדיר האם התמונה שהועלתה מכילה תוכן שיווקי.<br/>
-                    במידה והתמונה מכילה תוכן שיווקי עליכם להגדיר זאת.<br/>
+                    יש להגדיר האם התמונה שהועלתה מכילה תוכן שיווקי.<br />
+                    במידה והתמונה מכילה תוכן שיווקי עליכם להגדיר זאת.<br />
                     בכניסה לחשבונית, במידה והלקוח בחר לא להציג תוכן שיווקי, התמונות המכילות תוכן שיווקי לא יוצגו, זאת בהתאם לחוק בישראל
                   </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          <RadioGroup 
-            value={isPromotional ? "yes" : "no"} 
-            onValueChange={(value) => onSettingsChange({ [promotionalField]: value === "yes" })}
-            className="flex gap-6"
-            dir="rtl"
-          >
+          <RadioGroup value={isPromotional ? "yes" : "no"} onValueChange={value => onSettingsChange({
+          [promotionalField]: value === "yes"
+        })} className="flex gap-6" dir="rtl">
             <div className="flex items-center space-x-2 space-x-reverse">
               <RadioGroupItem value="yes" id={`${field}-yes`} />
               <Label htmlFor={`${field}-yes`} className="text-sm">כן</Label>
@@ -264,30 +232,37 @@ export default function EditingSidebar({
             </div>
           </RadioGroup>
         </div>
-      </div>
-    );
+      </div>;
   };
 
   // Combine system and custom templates for dropdown
-  const allTemplates = [
-    { value: "לבן נקי", label: "לבן נקי", isSystem: true },
-    { value: "תכלת חלומי", label: "תכלת חלומי", isSystem: true },
-    { value: "קרם שקדי", label: "קרם שקדי", isSystem: true },
-    { value: "ורוד מרשמלו", label: "ורוד מרשמלו", isSystem: true },
-    ...customTemplates.map(t => ({ value: t.name, label: t.name, isSystem: false }))
-  ];
-
-  return (
-    <div className="w-full">
+  const allTemplates = [{
+    value: "לבן נקי",
+    label: "לבן נקי",
+    isSystem: true
+  }, {
+    value: "תכלת חלומי",
+    label: "תכלת חלומי",
+    isSystem: true
+  }, {
+    value: "קרם שקדי",
+    label: "קרם שקדי",
+    isSystem: true
+  }, {
+    value: "ורוד מרשמלו",
+    label: "ורוד מרשמלו",
+    isSystem: true
+  }, ...customTemplates.map(t => ({
+    value: t.name,
+    label: t.name,
+    isSystem: false
+  }))];
+  return <div className="w-full">
       <div className="pl-6 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">תבניות</Label>
-          <Select 
-            value={settings.template} 
-            onValueChange={handleTemplateSelect}
-            dir="rtl"
-          >
+          <Select value={settings.template} onValueChange={handleTemplateSelect} dir="rtl">
             <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
               <SelectValue />
             </SelectTrigger>
@@ -302,43 +277,22 @@ export default function EditingSidebar({
                 </div>
                 
                 <div className="pb-2">
-                  <SelectItem 
-                    value="לבן נקי" 
-                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "לבן נקי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
-                    }`}
-                  >
+                  <SelectItem value="לבן נקי" className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${settings.template === "לבן נקי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"}`}>
                     לבן נקי
                   </SelectItem>
-                  <SelectItem 
-                    value="תכלת חלומי" 
-                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "תכלת חלומי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
-                    }`}
-                  >
+                  <SelectItem value="תכלת חלומי" className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${settings.template === "תכלת חלומי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"}`}>
                     תכלת חלומי
                   </SelectItem>
-                  <SelectItem 
-                    value="קרם שקדי" 
-                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "קרם שקדי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
-                    }`}
-                  >
+                  <SelectItem value="קרם שקדי" className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${settings.template === "קרם שקדי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"}`}>
                     קרם שקדי
                   </SelectItem>
-                  <SelectItem 
-                    value="ורוד מרשמלו" 
-                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "ורוד מרשמלו" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
-                    }`}
-                  >
+                  <SelectItem value="ורוד מרשמלו" className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${settings.template === "ורוד מרשמלו" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"}`}>
                     ורוד מרשמלו
                   </SelectItem>
                 </div>
 
                 {/* Custom Templates Category */}
-                {customTemplates.length > 0 && (
-                  <>
+                {customTemplates.length > 0 && <>
                     <div className="px-3 py-2 border-b border-gray-100">
                       <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
                         <User className="w-3 h-3" />
@@ -347,33 +301,20 @@ export default function EditingSidebar({
                     </div>
                     
                     <div className="pt-2">
-                      {customTemplates.map((template) => (
-                        <div key={template.name} className="flex items-center justify-between hover:bg-gray-50 px-3 py-2 rounded-md group mr-4">
-                          <SelectItem 
-                            value={template.name}
-                            className={`flex-1 p-0 hover:bg-transparent focus:bg-transparent cursor-pointer text-sm ${
-                              settings.template === template.name ? "bg-green-50 text-green-700" : "text-gray-700"
-                            }`}
-                          >
+                      {customTemplates.map(template => <div key={template.name} className="flex items-center justify-between hover:bg-gray-50 px-3 py-2 rounded-md group mr-4">
+                          <SelectItem value={template.name} className={`flex-1 p-0 hover:bg-transparent focus:bg-transparent cursor-pointer text-sm ${settings.template === template.name ? "bg-green-50 text-green-700" : "text-gray-700"}`}>
                             {template.name}
                           </SelectItem>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleDeleteTemplate(template.name);
-                            }}
-                            className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-gray-400 hover:text-red-500 transition-opacity ml-2"
-                          >
+                          <Button size="sm" variant="ghost" onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleDeleteTemplate(template.name);
+                    }} className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-gray-400 hover:text-red-500 transition-opacity ml-2">
                             <Trash2 className="h-3 w-3" />
                           </Button>
-                        </div>
-                      ))}
+                        </div>)}
                     </div>
-                  </>
-                )}
+                  </>}
               </div>
             </SelectContent>
           </Select>
@@ -382,9 +323,7 @@ export default function EditingSidebar({
         {/* Logo & Banners */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">לוגו ובאנרים</Label>
-          <p className="text-sm text-receipt-gray mb-4">
-            באמצעות עריכת התמונות יהיה ניתן להכניס טקסט הבנקת שדות התוצרת
-          </p>
+          <p className="text-sm text-receipt-gray mb-4">באפשרותך לגרור ולשחרר את הלוגו או הבאנר ישירות לתצוגה</p>
           
           <div className="space-y-4">
             {renderUploadArea('topBanner', 'באנר עליון', settings.topBanner)}
@@ -396,7 +335,9 @@ export default function EditingSidebar({
         {/* Font Selection */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">גופן</Label>
-          <Select value={settings.font} onValueChange={(value) => onSettingsChange({ font: value })} dir="rtl">
+          <Select value={settings.font} onValueChange={value => onSettingsChange({
+          font: value
+        })} dir="rtl">
             <SelectTrigger className="w-full border border-gray-200 hover:border-gray-300 focus:border-[#5EA30D] focus:ring-1 focus:ring-[#5EA30D]" dir="rtl">
               <SelectValue />
             </SelectTrigger>
@@ -415,32 +356,17 @@ export default function EditingSidebar({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">רקע</Label>
-              <input
-                type="color"
-                value={settings.backgroundColor}
-                onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
-                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-              />
+              <input type="color" value={settings.backgroundColor} onChange={e => handleColorChange('backgroundColor', e.target.value)} className="w-8 h-8 rounded border border-receipt-border cursor-pointer" />
             </div>
             
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">טקסט</Label>
-              <input
-                type="color"
-                value={settings.textColor}
-                onChange={(e) => handleColorChange('textColor', e.target.value)}
-                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-              />
+              <input type="color" value={settings.textColor} onChange={e => handleColorChange('textColor', e.target.value)} className="w-8 h-8 rounded border border-receipt-border cursor-pointer" />
             </div>
             
             <div className="flex items-center justify-between">
               <Label className="text-sm text-receipt-text">טקסט מבצע</Label>
-              <input
-                type="color"
-                value={settings.promotionTextColor}
-                onChange={(e) => handleColorChange('promotionTextColor', e.target.value)}
-                className="w-8 h-8 rounded border border-receipt-border cursor-pointer"
-              />
+              <input type="color" value={settings.promotionTextColor} onChange={e => handleColorChange('promotionTextColor', e.target.value)} className="w-8 h-8 rounded border border-receipt-border cursor-pointer" />
             </div>
           </div>
         </div>
@@ -450,45 +376,18 @@ export default function EditingSidebar({
           <Label className="text-base font-bold mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
           <div className="space-y-3 pb-6">
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png" 
-                alt="Facebook" 
-                className="w-5 h-5 object-contain"
-              />
-              <Input
-                placeholder="הזן כתובת URL"
-                value={settings.socialMedia.facebook}
-                onChange={(e) => onSocialMediaChange('facebook', e.target.value)}
-                className="flex-1"
-              />
+              <img src="/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png" alt="Facebook" className="w-5 h-5 object-contain" />
+              <Input placeholder="הזן כתובת URL" value={settings.socialMedia.facebook} onChange={e => onSocialMediaChange('facebook', e.target.value)} className="flex-1" />
             </div>
             
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png" 
-                alt="Instagram" 
-                className="w-5 h-5 object-contain"
-              />
-              <Input
-                placeholder="הזן כתובת URL"
-                value={settings.socialMedia.instagram}
-                onChange={(e) => onSocialMediaChange('instagram', e.target.value)}
-                className="flex-1"
-              />
+              <img src="/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png" alt="Instagram" className="w-5 h-5 object-contain" />
+              <Input placeholder="הזן כתובת URL" value={settings.socialMedia.instagram} onChange={e => onSocialMediaChange('instagram', e.target.value)} className="flex-1" />
             </div>
             
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png" 
-                alt="TikTok" 
-                className="w-5 h-5 object-contain"
-              />
-              <Input
-                placeholder="הזן כתובת URL"
-                value={settings.socialMedia.other}
-                onChange={(e) => onSocialMediaChange('other', e.target.value)}
-                className="flex-1"
-              />
+              <img src="/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png" alt="TikTok" className="w-5 h-5 object-contain" />
+              <Input placeholder="הזן כתובת URL" value={settings.socialMedia.other} onChange={e => onSocialMediaChange('other', e.target.value)} className="flex-1" />
             </div>
           </div>
         </div>
@@ -496,38 +395,22 @@ export default function EditingSidebar({
 
       {/* Bottom Action Bar */}
       <div className="sticky bottom-0 bg-white border-t border-receipt-border p-6 space-y-3">
-        <Button 
-          onClick={handleSaveClick}
-          disabled={isSaving}
-          className="w-full bg-receipt-green hover:bg-receipt-green/90 text-white"
-        >
+        <Button onClick={handleSaveClick} disabled={isSaving} className="w-full bg-receipt-green hover:bg-receipt-green/90 text-white">
           <Save className="w-4 h-4 ml-2" />
           {isSaving ? "שומר..." : "שמור שינויים"}
         </Button>
         
-        <Button 
-          onClick={handleCreateTemplateClick}
-          variant="outline" 
-          className="w-full border-receipt-border text-receipt-text hover:bg-receipt-lightgray"
-        >
+        <Button onClick={handleCreateTemplateClick} variant="outline" className="w-full border-receipt-border text-receipt-text hover:bg-receipt-lightgray">
           <Plus className="w-4 h-4 ml-2" />
           צור תבנית
         </Button>
         
-        <button 
-          onClick={onReset}
-          className="w-full text-sm text-receipt-gray hover:text-receipt-text flex items-center justify-center gap-2 py-2"
-        >
+        <button onClick={onReset} className="w-full text-sm text-receipt-gray hover:text-receipt-text flex items-center justify-center gap-2 py-2">
           <RotateCcw className="w-4 h-4" />
           אפס הכל
         </button>
       </div>
       
-      <TemplateModal
-        isOpen={isTemplateModalOpen}
-        onClose={() => setIsTemplateModalOpen(false)}
-        onSave={handleSaveTemplate}
-      />
-    </div>
-  );
+      <TemplateModal isOpen={isTemplateModalOpen} onClose={() => setIsTemplateModalOpen(false)} onSave={handleSaveTemplate} />
+    </div>;
 }
