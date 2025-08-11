@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import InvoiceReceipt from "./InvoiceReceipt";
 import EditingSidebar from "./EditingSidebar";
@@ -38,6 +38,17 @@ const defaultSettings: InvoiceSettings = {
 
 export default function InvoiceInterface() {
   const [settings, setSettings] = useState<InvoiceSettings>(defaultSettings);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSettingsChange = (newSettings: Partial<InvoiceSettings>) => {
     setSettings((prev) => ({ ...prev, ...newSettings }));
@@ -77,7 +88,9 @@ export default function InvoiceInterface() {
   return (
     <div className="min-h-screen bg-background font-assistant rtl-container">
       {/* Header Bar */}
-      <header className="bg-receipt-green h-20 flex items-center justify-between px-6 text-white">
+      <header className={`bg-receipt-green h-20 flex items-center justify-between px-6 text-white transition-all duration-300 ease-in-out sticky top-0 z-50 ${
+        isScrolled ? 'transform -translate-y-2 shadow-lg h-16' : 'transform translate-y-0'
+      }`}>
         <div className="flex items-center gap-3">
           <User className="w-6 h-6" />
           <span className="font-medium">שם משתמש</span>
