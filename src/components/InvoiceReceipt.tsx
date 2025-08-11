@@ -62,7 +62,7 @@ export default function InvoiceReceipt({ settings, onSettingsChange }: InvoiceRe
       <div className="p-6 text-center">
         {/* Small Logo */}
         <div 
-          className="w-[70px] h-[70px] bg-receipt-lightgray mx-auto mb-4 rounded flex items-center justify-center cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"
+          className="w-[140px] h-[140px] bg-receipt-lightgray mx-auto mb-4 rounded flex items-center justify-center cursor-pointer border-2 border-dashed border-transparent hover:border-blue-300 transition-colors"
           onDrop={(e) => handleDrop(e, 'logo')}
           onDragOver={handleDragOver}
           onDragEnter={(e) => e.preventDefault()}
