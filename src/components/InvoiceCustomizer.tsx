@@ -92,23 +92,32 @@ export default function InvoiceCustomizer() {
           promotionTextColor: '#dc3545',
           font: 'Assistant'
         };
-      case 'צבעוני':
+      case 'תכלת חלומי':
         return {
-          backgroundColor: '#fff3cd',
-          innerFrameColor: '#ffeaa7',
-          outerFrameColor: '#fdcb6e',
-          textColor: '#2d3436',
-          promotionTextColor: '#e17055',
+          backgroundColor: '#f0f8ff',
+          innerFrameColor: '#e6f3ff',
+          outerFrameColor: '#cce7ff',
+          textColor: '#1a365d',
+          promotionTextColor: '#2b77ad',
           font: 'Assistant'
         };
-      case 'מינימליסטי':
+      case 'קרם שקדי':
         return {
-          backgroundColor: '#f8f9fa',
-          innerFrameColor: '#e9ecef',
-          outerFrameColor: '#dee2e6',
-          textColor: '#495057',
-          promotionTextColor: '#6c757d',
-          font: 'Arial'
+          backgroundColor: '#faf8f3',
+          innerFrameColor: '#f5f0e8',
+          outerFrameColor: '#ede4d3',
+          textColor: '#4a4037',
+          promotionTextColor: '#b8860b',
+          font: 'Assistant'
+        };
+      case 'ורוד מרשמלו':
+        return {
+          backgroundColor: '#fdf2f8',
+          innerFrameColor: '#fce7f3',
+          outerFrameColor: '#f9a8d4',
+          textColor: '#831843',
+          promotionTextColor: '#be185d',
+          font: 'Assistant'
         };
       default:
         return {};
