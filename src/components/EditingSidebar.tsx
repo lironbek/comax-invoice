@@ -389,7 +389,7 @@ export default function EditingSidebar({
 
         {/* Social Media Links */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
+          <Label className="text-base font-bold mb-3 block text-receipt-text">קישור לרשתות החברתיות</Label>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <Facebook className="w-5 h-5 text-blue-600" />
