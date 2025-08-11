@@ -233,7 +233,7 @@ export default function EditingSidebar({
       <div className="pl-1 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
-          <Label className="text-base font-medium mb-3 block text-receipt-text">טמפלטים</Label>
+          <Label className="text-base font-bold mb-3 block text-receipt-text">טמפלטים</Label>
           <Select 
             value={settings.template} 
             onValueChange={handleTemplateSelect}
