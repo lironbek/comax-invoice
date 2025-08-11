@@ -228,8 +228,7 @@ export default function EditingSidebar({
   ];
 
   return (
-    <div className="h-full w-[400px] flex flex-col">
-      {/* Fixed top section - up to font menu */}
+    <div className="w-full">
       <div className="pl-6 pr-6 py-6 space-y-8">
         {/* Template Selection */}
         <div>
@@ -350,10 +349,6 @@ export default function EditingSidebar({
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      {/* Scrollable section for remaining options */}
-      <div className="flex-1 overflow-y-auto pl-6 pr-6 space-y-8">
         {/* Colors */}
         <div>
           <Label className="text-base font-bold mb-3 block text-receipt-text">צבעים</Label>

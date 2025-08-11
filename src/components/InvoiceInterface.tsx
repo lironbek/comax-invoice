@@ -104,9 +104,9 @@ export default function InvoiceInterface() {
       </header>
 
       {/* Main Content */}
-      <div className="flex"> 
+      <div className="flex h-[calc(100vh-5rem)]"> 
         {/* Editing Sidebar - Left Side */}
-        <div className="w-[400px] border-r border-receipt-border bg-white">
+        <div className="w-[400px] border-r border-receipt-border bg-white overflow-y-auto">
           <EditingSidebar
             settings={settings}
             onSettingsChange={handleSettingsChange}
@@ -118,7 +118,7 @@ export default function InvoiceInterface() {
         </div>
 
         {/* Invoice Receipt - Right Side */}
-        <div className="flex-1 p-8 flex justify-center bg-gray-50">
+        <div className="flex-1 p-8 flex justify-center bg-gray-50 overflow-y-auto">
           <InvoiceReceipt settings={settings} onSettingsChange={handleSettingsChange} />
         </div>
       </div>
