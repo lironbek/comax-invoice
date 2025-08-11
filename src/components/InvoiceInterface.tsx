@@ -51,7 +51,52 @@ export default function InvoiceInterface() {
   }, []);
 
   const handleSettingsChange = (newSettings: Partial<InvoiceSettings>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      
+      // Apply template presets when template changes
+      if ('template' in newSettings && newSettings.template !== prev.template) {
+        const templateSettings = getTemplateSettings(newSettings.template!);
+        Object.assign(updated, templateSettings);
+      }
+      
+      return updated;
+    });
+  };
+
+  const getTemplateSettings = (template: string): Partial<InvoiceSettings> => {
+    switch (template) {
+      case 'לבן נקי':
+        return {
+          backgroundColor: '#ffffff',
+          textColor: '#1B2534',
+          promotionTextColor: '#E69409',
+          font: 'Assistant'
+        };
+      case 'תכלת חלומי':
+        return {
+          backgroundColor: '#f0f8ff',
+          textColor: '#1a365d',
+          promotionTextColor: '#2b77ad',
+          font: 'Assistant'
+        };
+      case 'קרם שקדי':
+        return {
+          backgroundColor: '#faf8f3',
+          textColor: '#4a4037',
+          promotionTextColor: '#b8860b',
+          font: 'Assistant'
+        };
+      case 'ורוד מרשמלו':
+        return {
+          backgroundColor: '#fdf2f8',
+          textColor: '#831843',
+          promotionTextColor: '#be185d',
+          font: 'Assistant'
+        };
+      default:
+        return {};
+    }
   };
 
   const handleSocialMediaChange = (
