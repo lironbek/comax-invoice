@@ -222,8 +222,9 @@ export default function EditingSidebar({
   // Combine system and custom templates for dropdown
   const allTemplates = [
     { value: "לבן נקי", label: "לבן נקי", isSystem: true },
-    { value: "צבעוני", label: "צבעוני", isSystem: true },
-    { value: "מינימליסטי", label: "מינימליסטי", isSystem: true },
+    { value: "תכלת חלומי", label: "תכלת חלומי", isSystem: true },
+    { value: "קרם שקדי", label: "קרם שקדי", isSystem: true },
+    { value: "ורוד מרשמלו", label: "ורוד מרשמלו", isSystem: true },
     ...customTemplates.map(t => ({ value: t.name, label: t.name, isSystem: false }))
   ];
 
@@ -261,20 +262,28 @@ export default function EditingSidebar({
                     לבן נקי
                   </SelectItem>
                   <SelectItem 
-                    value="צבעוני" 
+                    value="תכלת חלומי" 
                     className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "צבעוני" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                      settings.template === "תכלת חלומי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
                     }`}
                   >
-                    צבעוני
+                    תכלת חלומי
                   </SelectItem>
                   <SelectItem 
-                    value="מינימליסטי" 
+                    value="קרם שקדי" 
                     className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
-                      settings.template === "מינימליסטי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                      settings.template === "קרם שקדי" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
                     }`}
                   >
-                    מינימליסטי
+                    קרם שקדי
+                  </SelectItem>
+                  <SelectItem 
+                    value="ורוד מרשמלו" 
+                    className={`hover:bg-gray-50 focus:bg-gray-50 cursor-pointer px-3 py-2 rounded-md text-sm mr-4 ${
+                      settings.template === "ורוד מרשמלו" ? "bg-green-50 text-green-700 border-r-2 border-green-500" : "text-gray-700"
+                    }`}
+                  >
+                    ורוד מרשמלו
                   </SelectItem>
                 </div>
 
