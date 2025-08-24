@@ -195,7 +195,7 @@ export default function EditingSidebar({
                 {!dragStates[field] && <span className="text-blue-500 underline">לחץ כאן</span>}
               </p>
               {!dragStates[field] && <p className="text-xs text-receipt-gray mt-1">
-                  PNG, JPG עד 1MB מומלץ 200x200px
+                  PNG, JPG עד 1MB מומלץ {field === 'logo' ? '140x140px' : '390x180px'}
                 </p>}
             </div>
           </div>}

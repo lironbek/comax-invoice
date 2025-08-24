@@ -63,7 +63,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x200px, max 2MB</p>
+          <p className="text-xs text-muted-foreground">Recommended size: 390x180px, max 1MB</p>
         </div>
 
         <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 200x200px, max 1MB</p>
+          <p className="text-xs text-muted-foreground">Recommended size: 140x140px, max 1MB</p>
         </div>
 
         <div className="space-y-2">
@@ -133,7 +133,7 @@ export default function CustomizationPanel({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">Recommended size: 800x100px, max 1MB</p>
+          <p className="text-xs text-muted-foreground">Recommended size: 390x180px, max 1MB</p>
         </div>
 
         <div className="space-y-6">
