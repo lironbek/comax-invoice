@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { User } from "lucide-react";
+import { User, FileCode } from "lucide-react";
 import InvoiceReceipt from "./InvoiceReceipt";
 import EditingSidebar from "./EditingSidebar";
+import JsonToHtmlModal from "./JsonToHtmlModal";
+import { Button } from "./ui/button";
 
 export interface InvoiceSettings {
   template: string;
@@ -45,6 +47,7 @@ const defaultSettings: InvoiceSettings = {
 export default function InvoiceInterface() {
   const [settings, setSettings] = useState<InvoiceSettings>(defaultSettings);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -147,12 +150,28 @@ export default function InvoiceInterface() {
           <span className="font-medium">שם משתמש</span>
         </div>
         <div className="flex items-center gap-3">
+          <Button 
+            onClick={() => setIsJsonModalOpen(true)}
+            variant="secondary"
+            size="sm"
+            className="bg-white/20 hover:bg-white/30 text-white border-0"
+          >
+            <FileCode className="w-4 h-4 ml-2" />
+            JSON → HTML
+          </Button>
           <span className="font-medium">שם חברה</span>
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
             <span className="text-receipt-green font-bold text-sm">ח</span>
           </div>
         </div>
       </header>
+
+      {/* JSON to HTML Modal */}
+      <JsonToHtmlModal 
+        isOpen={isJsonModalOpen} 
+        onClose={() => setIsJsonModalOpen(false)} 
+        settings={settings} 
+      />
 
       {/* Main Content */}
       <div className="flex h-[calc(100vh-5rem)]"> 
