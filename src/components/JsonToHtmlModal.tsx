@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, FileCode, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import { buildInvoiceModelFromJson, BuildResult } from "@/lib/invoiceModel";
-import { generateInvoiceHtml } from "@/lib/invoiceHtmlGenerator";
+import { generateInvoiceHtml, convertImagesToBase64 } from "@/lib/invoiceHtmlGenerator";
 import { InvoiceSettings } from "./InvoiceInterface";
 import { toast } from "sonner";
 
@@ -107,10 +107,13 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
   const [generatedHtml, setGeneratedHtml] = useState<string>("");
   const [parseError, setParseError] = useState<string>("");
 
-  const handleGenerate = () => {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = async () => {
     setParseError("");
     setBuildResult(null);
     setGeneratedHtml("");
+    setIsGenerating(true);
 
     // Try to parse JSON
     let parsedJson: unknown;
@@ -119,6 +122,7 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : "שגיאה לא ידועה";
       setParseError(`שגיאה בפענוח JSON: ${errorMessage}`);
+      setIsGenerating(false);
       return;
     }
 
@@ -127,14 +131,25 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
     setBuildResult(result);
 
     if (result.error) {
+      setIsGenerating(false);
       return;
     }
 
     if (result.model) {
-      // Generate HTML
-      const html = generateInvoiceHtml(result.model, settings);
-      setGeneratedHtml(html);
+      try {
+        // Convert images to Base64 for portability
+        const settingsWithBase64 = await convertImagesToBase64(settings);
+        
+        // Generate HTML
+        const html = generateInvoiceHtml(result.model, settingsWithBase64);
+        setGeneratedHtml(html);
+      } catch (err) {
+        console.error('Error generating HTML:', err);
+        setParseError("שגיאה ביצירת ה-HTML");
+      }
     }
+    
+    setIsGenerating(false);
   };
 
   const handleCopyHtml = async () => {
@@ -245,9 +260,9 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
 
         {/* Actions */}
         <div className="flex gap-3 pt-4 border-t">
-          <Button onClick={handleGenerate} className="flex-1">
+          <Button onClick={handleGenerate} className="flex-1" disabled={isGenerating}>
             <FileCode className="w-4 h-4 ml-2" />
-            צור HTML
+            {isGenerating ? "מייצר..." : "צור HTML"}
           </Button>
           
           {generatedHtml && (

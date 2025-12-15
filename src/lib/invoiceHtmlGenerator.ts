@@ -41,6 +41,49 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (m) => map[m] || m);
 }
 
+// Convert image URL to Base64 data URI
+async function imageToBase64(url: string): Promise<string> {
+  if (!url) return '';
+  
+  // If already a data URI, return as-is
+  if (url.startsWith('data:')) return url;
+  
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = () => {
+        resolve(''); // Return empty on error
+      };
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    console.warn('Failed to convert image to base64:', url);
+    return '';
+  }
+}
+
+// Convert all images in settings to Base64
+export async function convertImagesToBase64(settings: InvoiceSettings): Promise<InvoiceSettings> {
+  const [topBannerBase64, logoBase64, bottomBannerBase64] = await Promise.all([
+    settings.topBanner ? imageToBase64(settings.topBanner) : Promise.resolve(''),
+    settings.logo ? imageToBase64(settings.logo) : Promise.resolve(''),
+    settings.bottomBanner ? imageToBase64(settings.bottomBanner) : Promise.resolve('')
+  ]);
+  
+  return {
+    ...settings,
+    topBanner: topBannerBase64,
+    logo: logoBase64,
+    bottomBanner: bottomBannerBase64
+  };
+}
+
 export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettings): string {
   const { backgroundColor, textColor, promotionTextColor, font, topBanner, logo, bottomBanner, socialMedia } = settings;
 
