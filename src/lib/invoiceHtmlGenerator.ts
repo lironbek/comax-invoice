@@ -99,53 +99,46 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
-  // Top banner HTML
+  // Top banner HTML - only show if exists
   const topBannerHtml = topBanner ? `
     <div style="width: 100%; height: 180px; overflow: hidden;">
       <img src="${absoluteUrl(topBanner)}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
-  ` : `
-    <div style="width: 100%; height: 180px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;">
-      <div style="width: 64px; height: 64px; background: white; border-radius: 8px;"></div>
-    </div>
-  `;
+  ` : '';
 
-  // Logo HTML
+  // Logo HTML - only show if exists
   const logoHtml = logo ? `
-    <div style="width: 140px; height: 140px; margin: 0 auto 16px; overflow: hidden; border-radius: 8px;">
+    <div style="width: 140px; height: 140px; margin: 0 auto 16px; overflow: hidden; border-radius: 8px; background-color: #f3f4f6;">
       <img src="${absoluteUrl(logo)}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;" />
     </div>
-  ` : `
-    <div style="width: 140px; height: 140px; margin: 0 auto 16px; background-color: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-      <div style="width: 64px; height: 64px; background: white; border-radius: 8px;"></div>
-    </div>
-  `;
+  ` : '';
 
-  // Bottom banner HTML
+  // Bottom banner HTML - only show if exists
   const bottomBannerHtml = bottomBanner ? `
     <div style="width: 100%; height: 180px; overflow: hidden;">
       <img src="${absoluteUrl(bottomBanner)}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
-  ` : `
-    <div style="width: 100%; height: 180px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;">
-      <div style="width: 64px; height: 64px; background: white; border-radius: 8px;"></div>
-    </div>
-  `;
+  ` : '';
 
-  // Social media HTML - use absolute URLs for external viewing
+  // SVG icons for social media (inline to work in any HTML viewer)
+  const tiktokSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>';
+  const instagramSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>';
+  const facebookSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
+
+  // Social media HTML with inline SVGs
   let socialHtml = '';
   const hasSocial = socialMedia.facebook || socialMedia.instagram || socialMedia.other;
   if (hasSocial) {
     const socialLinks = [];
     
-    if (socialMedia.facebook) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.facebook)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png')}" alt="Facebook" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+    if (socialMedia.other) {
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.other)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; color: ${textColor};">${tiktokSvg}</a>`);
     }
     if (socialMedia.instagram) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.instagram)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png')}" alt="Instagram" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.instagram)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; color: ${textColor};">${instagramSvg}</a>`);
     }
-    if (socialMedia.other) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.other)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png')}" alt="Social" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+    if (socialMedia.facebook) {
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.facebook)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; color: ${textColor};">${facebookSvg}</a>`);
     }
     socialHtml = `
       <div style="padding: 16px 24px; text-align: center;">
@@ -155,6 +148,9 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
       </div>
     `;
   }
+
+  // Download source button SVG icon
+  const downloadSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
 
   // Build summary rows
   const summaryRows = [];
@@ -317,6 +313,14 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     <!-- Summary -->
     <div style="padding: 0 24px 16px; font-size: 14px;">
       ${summaryRows.join('')}
+    </div>
+
+    <!-- Download Source Button -->
+    <div style="padding: 0 24px 16px;">
+      <button onclick="window.print()" style="width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: transparent; color: ${textColor}; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit;">
+        ${downloadSvg}
+        הורדת מסמך מקור
+      </button>
     </div>
 
     <!-- Barcode -->

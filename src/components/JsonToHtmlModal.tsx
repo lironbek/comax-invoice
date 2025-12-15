@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, FileCode, AlertTriangle, CheckCircle } from "lucide-react";
+import { Copy, FileCode, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import { buildInvoiceModelFromJson, BuildResult } from "@/lib/invoiceModel";
 import { generateInvoiceHtml } from "@/lib/invoiceHtmlGenerator";
 import { InvoiceSettings } from "./InvoiceInterface";
@@ -148,6 +148,21 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
     }
   };
 
+  const handleDownloadHtml = () => {
+    if (!generatedHtml) return;
+    
+    const blob = new Blob([generatedHtml], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-${buildResult?.model?.receiptNumber || 'export'}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("הקובץ הורד בהצלחה!");
+  };
+
   const handleReset = () => {
     setJsonInput(SAMPLE_JSON);
     setBuildResult(null);
@@ -236,10 +251,16 @@ export default function JsonToHtmlModal({ isOpen, onClose, settings }: JsonToHtm
           </Button>
           
           {generatedHtml && (
-            <Button onClick={handleCopyHtml} variant="secondary" className="flex-1">
-              <Copy className="w-4 h-4 ml-2" />
-              העתק HTML
-            </Button>
+            <>
+              <Button onClick={handleCopyHtml} variant="secondary" className="flex-1">
+                <Copy className="w-4 h-4 ml-2" />
+                העתק HTML
+              </Button>
+              <Button onClick={handleDownloadHtml} variant="secondary" className="flex-1">
+                <Download className="w-4 h-4 ml-2" />
+                הורד קובץ
+              </Button>
+            </>
           )}
           
           <Button onClick={handleReset} variant="outline">
