@@ -23,8 +23,9 @@ export interface InvoiceModel {
   invoiceId: string;
   receiptNumber: string;
   createdAt: string;
-  branchId: string;
-  posId: string;
+  companyName: string;    // BusinessID
+  branchName: string;     // BranchID
+  posNumber: string;      // PosId
   cashierName: string;
   cashierId: string;
   customerName: string;
@@ -32,6 +33,7 @@ export interface InvoiceModel {
   customerPhone: string;
   customerEmail: string;
   reference: string;
+  barcode: string;        // Barcode field for barcode image
 
   // Totals / Summary
   currency: string;
@@ -191,8 +193,9 @@ export function buildInvoiceModelFromJson(rawJson: unknown): BuildResult {
     invoiceId: toString(json.ID, ""),
     receiptNumber,
     createdAt,
-    branchId: toString(json.BranchID, ""),
-    posId: toString(json.PosId, ""),
+    companyName: toString(json.BusinessID, ""),
+    branchName: toString(json.BranchID, ""),
+    posNumber: toString(json.PosId, ""),
     cashierName: toString(json.CashierName, ""),
     cashierId: toString(json.CashierID, ""),
     customerName,
@@ -200,6 +203,7 @@ export function buildInvoiceModelFromJson(rawJson: unknown): BuildResult {
     customerPhone: toString(json.Target, ""),
     customerEmail,
     reference: toString(json.Reference, ""),
+    barcode: toString(json.Barcode, ""),
 
     // Totals / Summary
     currency: toString(json.Currency, "שקל"),

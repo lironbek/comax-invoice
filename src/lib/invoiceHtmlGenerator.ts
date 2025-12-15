@@ -87,10 +87,22 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     `;
   }).join('');
 
+  // Get base URL for absolute image paths
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  
+  // Helper to make image URL absolute
+  const absoluteUrl = (url: string): string => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+      return url;
+    }
+    return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   // Top banner HTML
   const topBannerHtml = topBanner ? `
     <div style="width: 100%; height: 180px; overflow: hidden;">
-      <img src="${topBanner}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
+      <img src="${absoluteUrl(topBanner)}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
   ` : `
     <div style="width: 100%; height: 180px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;">
@@ -101,7 +113,7 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
   // Logo HTML
   const logoHtml = logo ? `
     <div style="width: 140px; height: 140px; margin: 0 auto 16px; overflow: hidden; border-radius: 8px;">
-      <img src="${logo}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+      <img src="${absoluteUrl(logo)}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;" />
     </div>
   ` : `
     <div style="width: 140px; height: 140px; margin: 0 auto 16px; background-color: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
@@ -112,7 +124,7 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
   // Bottom banner HTML
   const bottomBannerHtml = bottomBanner ? `
     <div style="width: 100%; height: 180px; overflow: hidden;">
-      <img src="${bottomBanner}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
+      <img src="${absoluteUrl(bottomBanner)}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;" />
     </div>
   ` : `
     <div style="width: 100%; height: 180px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;">
@@ -120,19 +132,20 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     </div>
   `;
 
-  // Social media HTML
+  // Social media HTML - use absolute URLs for external viewing
   let socialHtml = '';
   const hasSocial = socialMedia.facebook || socialMedia.instagram || socialMedia.other;
   if (hasSocial) {
     const socialLinks = [];
+    
     if (socialMedia.facebook) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.facebook)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png" alt="Facebook" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.facebook)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/2e2fff5d-abaa-435a-bfb6-417155d41560.png')}" alt="Facebook" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
     }
     if (socialMedia.instagram) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.instagram)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png" alt="Instagram" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.instagram)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/a6964d17-68d2-4f0a-879e-40402b8c0a2c.png')}" alt="Instagram" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
     }
     if (socialMedia.other) {
-      socialLinks.push(`<a href="${escapeHtml(socialMedia.other)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png" alt="Social" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
+      socialLinks.push(`<a href="${escapeHtml(socialMedia.other)}" target="_blank" rel="noopener noreferrer" style="width: 32px; height: 32px; display: inline-block;"><img src="${absoluteUrl('/lovable-uploads/e6268c0c-e32f-41a8-b2e6-6211cd2edb0d.png')}" alt="Social" style="width: 100%; height: 100%; object-fit: contain;" /></a>`);
     }
     socialHtml = `
       <div style="padding: 16px 24px; text-align: center;">
@@ -190,11 +203,11 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     `);
   }
 
-  if (model.posId) {
+  if (model.posNumber) {
     summaryRows.push(`
       <div style="display: flex; justify-content: space-between; padding: 4px 0;">
         <span>מספר קופה</span>
-        <span>${escapeHtml(model.posId)}</span>
+        <span>${escapeHtml(model.posNumber)}</span>
       </div>
     `);
   }
@@ -269,8 +282,8 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     <!-- Company Info -->
     <div style="padding: 24px; text-align: center;">
       ${logoHtml}
-      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">שם החברה</h2>
-      ${model.branchId ? `<p style="font-size: 14px; margin-bottom: 16px;">סניף ${escapeHtml(model.branchId)}</p>` : '<p style="font-size: 14px; margin-bottom: 16px;">שם הסניף</p>'}
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${model.companyName ? escapeHtml(model.companyName) : 'שם החברה'}</h2>
+      ${model.branchName ? `<p style="font-size: 14px; margin-bottom: 16px;">סניף ${escapeHtml(model.branchName)}</p>` : '<p style="font-size: 14px; margin-bottom: 16px;">שם הסניף</p>'}
       <div style="font-size: 28px; font-weight: 700;">${formatCurrency(model.total, model.currency)}</div>
     </div>
 
@@ -307,12 +320,10 @@ export function generateInvoiceHtml(model: InvoiceModel, settings: InvoiceSettin
     </div>
 
     <!-- Barcode -->
-    ${model.receiptNumber ? `
+    ${model.barcode ? `
     <div style="padding: 16px 24px; text-align: center;">
-      <div style="font-family: 'Libre Barcode 39', monospace; font-size: 48px; letter-spacing: 4px;">
-        *${escapeHtml(model.receiptNumber)}*
-      </div>
-      <div style="font-size: 12px; margin-top: 4px;">${escapeHtml(model.receiptNumber)}</div>
+      <img src="https://barcodeapi.org/api/128/${encodeURIComponent(model.barcode)}" alt="Barcode" style="max-width: 100%; height: 60px;" />
+      <div style="font-size: 12px; margin-top: 4px;">${escapeHtml(model.barcode)}</div>
     </div>
     ` : ''}
 
