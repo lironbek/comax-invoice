@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check, Trash2, FileText, User, HelpCircle } from "lucide-react";
+import { Upload, Save, Plus, RotateCcw, Facebook, Instagram, MessageSquare, X, Check, Trash2, FileText, User, HelpCircle, Loader2, Cloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InvoiceSettings } from "./InvoiceInterface";
 import TemplateModal from "./TemplateModal";
+import { templateService, TemplateRecord } from "@/lib/supabase";
 interface EditingSidebarProps {
   settings: InvoiceSettings;
   onSettingsChange: (settings: Partial<InvoiceSettings>) => void;
@@ -17,6 +18,7 @@ interface EditingSidebarProps {
   onReset: () => void;
 }
 interface CustomTemplate {
+  id?: string;
   name: string;
   settings: InvoiceSettings;
 }
@@ -29,6 +31,7 @@ export default function EditingSidebar({
   onReset
 }: EditingSidebarProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>([]);
   const [dragStates, setDragStates] = useState({
@@ -37,28 +40,46 @@ export default function EditingSidebar({
     bottomBanner: false
   });
 
-  // Load custom templates from localStorage on mount
+  // Load custom templates from Supabase on mount
   useEffect(() => {
-    const loadedTemplates: CustomTemplate[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('custom_template_')) {
-        const templateName = key.replace('custom_template_', '');
-        const templateData = localStorage.getItem(key);
-        if (templateData) {
-          try {
-            const settings = JSON.parse(templateData);
-            loadedTemplates.push({
-              name: templateName,
-              settings
-            });
-          } catch (e) {
-            console.error('Failed to parse template data', e);
+    const loadTemplates = async () => {
+      setIsLoadingTemplates(true);
+      try {
+        const templates = await templateService.getTemplates();
+        const customTemplatesData: CustomTemplate[] = templates.map(t => ({
+          id: t.id,
+          name: t.name,
+          settings: t.settings as InvoiceSettings
+        }));
+        setCustomTemplates(customTemplatesData);
+      } catch (error) {
+        console.error('Failed to load templates from Supabase:', error);
+        // Fallback to localStorage
+        const loadedTemplates: CustomTemplate[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key?.startsWith('custom_template_')) {
+            const templateName = key.replace('custom_template_', '');
+            const templateData = localStorage.getItem(key);
+            if (templateData) {
+              try {
+                const settings = JSON.parse(templateData);
+                loadedTemplates.push({
+                  name: templateName,
+                  settings
+                });
+              } catch (e) {
+                console.error('Failed to parse template data', e);
+              }
+            }
           }
         }
+        setCustomTemplates(loadedTemplates);
+      } finally {
+        setIsLoadingTemplates(false);
       }
-    }
-    setCustomTemplates(loadedTemplates);
+    };
+    loadTemplates();
   }, []);
   const handleFileUpload = (field: keyof Pick<InvoiceSettings, 'topBanner' | 'logo' | 'bottomBanner'>) => {
     const input = document.createElement('input');
@@ -140,19 +161,51 @@ export default function EditingSidebar({
   const handleCreateTemplateClick = () => {
     setIsTemplateModalOpen(true);
   };
-  const handleSaveTemplate = (templateName: string) => {
-    const templateKey = `custom_template_${templateName}`;
-    localStorage.setItem(templateKey, JSON.stringify(settings));
-    const newTemplate = {
-      name: templateName,
-      settings: {
-        ...settings
-      }
-    };
-    setCustomTemplates(prev => [...prev, newTemplate]);
-    setIsTemplateModalOpen(false);
+  const handleSaveTemplate = async (templateName: string) => {
+    setIsSaving(true);
+    try {
+      const newTemplateRecord = await templateService.createTemplate({
+        name: templateName,
+        settings: settings
+      });
+
+      const newTemplate: CustomTemplate = {
+        id: newTemplateRecord.id,
+        name: templateName,
+        settings: { ...settings }
+      };
+      setCustomTemplates(prev => [...prev, newTemplate]);
+
+      // Also save to localStorage as backup
+      const templateKey = `custom_template_${templateName}`;
+      localStorage.setItem(templateKey, JSON.stringify(settings));
+    } catch (error) {
+      console.error('Failed to save template to Supabase:', error);
+      // Fallback to localStorage only
+      const templateKey = `custom_template_${templateName}`;
+      localStorage.setItem(templateKey, JSON.stringify(settings));
+      const newTemplate: CustomTemplate = {
+        name: templateName,
+        settings: { ...settings }
+      };
+      setCustomTemplates(prev => [...prev, newTemplate]);
+    } finally {
+      setIsSaving(false);
+      setIsTemplateModalOpen(false);
+    }
   };
-  const handleDeleteTemplate = (templateName: string) => {
+  const handleDeleteTemplate = async (templateName: string) => {
+    const template = customTemplates.find(t => t.name === templateName);
+
+    try {
+      if (template?.id) {
+        await templateService.deleteTemplate(template.id);
+      }
+    } catch (error) {
+      console.error('Failed to delete template from Supabase:', error);
+    }
+
+    // Also remove from localStorage
     const templateKey = `custom_template_${templateName}`;
     localStorage.removeItem(templateKey);
     setCustomTemplates(prev => prev.filter(t => t.name !== templateName));
@@ -292,11 +345,17 @@ export default function EditingSidebar({
                 </div>
 
                 {/* Custom Templates Category */}
-                {customTemplates.length > 0 && <>
+                {isLoadingTemplates && (
+                  <div className="px-3 py-4 flex items-center justify-center gap-2 text-gray-500">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">טוען תבניות...</span>
+                  </div>
+                )}
+                {!isLoadingTemplates && customTemplates.length > 0 && <>
                     <div className="px-3 py-2 border-b border-gray-100">
                       <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
-                        <User className="w-3 h-3" />
-                        <span>מותאם אישית</span>
+                        <Cloud className="w-3 h-3" />
+                        <span>תבניות שמורות בענן</span>
                       </div>
                     </div>
                     

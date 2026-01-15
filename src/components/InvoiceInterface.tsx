@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { User, FileCode } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { User, FileCode, LogOut, Settings } from "lucide-react";
 import InvoiceReceipt from "./InvoiceReceipt";
 import EditingSidebar from "./EditingSidebar";
 import JsonToHtmlModal from "./JsonToHtmlModal";
@@ -45,9 +46,15 @@ const defaultSettings: InvoiceSettings = {
 };
 
 export default function InvoiceInterface() {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState<InvoiceSettings>(defaultSettings);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    // TODO: Add logout logic (clear session, etc.)
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,6 +153,26 @@ export default function InvoiceInterface() {
         isScrolled ? 'transform -translate-y-2 shadow-lg h-16' : 'transform translate-y-0'
       }`}>
         <div className="flex items-center gap-3">
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/20 gap-2"
+          >
+            <LogOut className="w-5 h-5" />
+            יציאה
+          </Button>
+          <div className="w-px h-8 bg-white/30 mx-2" />
+          <Button
+            onClick={() => navigate("/backoffice")}
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/20 gap-2"
+          >
+            <Settings className="w-5 h-5" />
+            בק אופיס
+          </Button>
+          <div className="w-px h-8 bg-white/30 mx-2" />
           <User className="w-6 h-6" />
           <span className="font-medium">שם משתמש</span>
         </div>
